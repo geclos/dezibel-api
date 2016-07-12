@@ -2,11 +2,11 @@
   "name": "dezibel-api",
   "version": "1.0.0",
   "description": "api for dezibel",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "ava",
-    "start": "node src/index",
-    "watch": "nodemon src/index"
+    "build": "node index",
+    "start": "NODE_ENV=development nodemon index"
   },
   "author": "Gerard Clos",
   "license": "ISC",
@@ -15,10 +15,16 @@
     "good-console": "^6.1.2",
     "good-squeeze": "^4.0.0",
     "hapi": "^13.5.0",
+    "hapi-auth-bearer-token": "^4.1.1",
     "hapi-swagger": "^6.1.0",
-    "joi": "^9.0.0"
+    "inert": "^4.0.1",
+    "joi": "^9.0.0",
+    "vision": "^4.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.9.2"
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }
