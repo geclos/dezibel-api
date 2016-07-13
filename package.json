@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "build": "node index",
+    "build": "NODE_ENV=production node index",
     "start": "NODE_ENV=development nodemon index"
   },
   "author": "Gerard Clos",

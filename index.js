@@ -1,25 +1,20 @@
 const Hapi = require('hapi')
 const routes = require('./routes')
 const middlewares = require('./middlewares')
-// import * as routes from 'routes'
 
 const __DEV__ = process.env.NODE_ENV === 'development'
 const server = new Hapi.Server()
 
 server.connection({
-  port: __DEV__ ? 3000 : process.env.PORT,
+  port: __DEV__ ? 3000 : (process.env.PORT || 3000),
   labels: [ 'api' ]
 })
 
 server.register([
-  middlewares.logger,
-  middlewares.swagger,
-  middlewares.auth
+  middlewares,
+  routes
 ], err => {
   if (err) throw err
-
-  server.route(routes.auth)
-  server.route(routes.users)
 
   server.start((err) => {
     if (err) throw err

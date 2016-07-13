@@ -1,17 +1,17 @@
-const models = require('../models')
+const models = require('../../models')
 
 module.exports = [{
+  path: '/token',
   method: 'GET',
-  path: '/foo',
+  handler: (req, reply) => reply({token: req.auth.credentials.token}).code(200),
   config: {
-    handler: (req, reply) => reply('foo').code(200),
     description: 'foo',
     auth: 'bearer',
     tags: ['api'],
     plugins: {
       'hapi-swagger': {
         responses: {
-          '200': models.response.defaultSuccess,
+          '200': models.response.defaultJSON,
           '401': models.response.unauthorized
         }
       }

@@ -9,9 +9,9 @@ module.exports.response = {
       'statusCode': Joi.number()
     })
   },
-  defaultSuccess: {
+  defaultJSON: {
     'description': 'Success',
-    'schema': Joi.string().label('Result')
+    'schema': Joi.object().unknown().label('json')
   }
 }
 

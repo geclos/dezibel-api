@@ -1,7 +1,14 @@
-const middlewares = {}
+exports.register = (server, options, next) => {
+  server.register([
+    require('./auth'),
+    require('./logger'),
+    require('./swagger')
+  ], err => {
+    if (err) throw err
+    next()
+  })
+}
 
-middlewares.auth = require('./auth')
-middlewares.logger = require('./logger')
-middlewares.swagger = require('./swagger')
-
-module.exports = middlewares
+exports.register.attributes = {
+  name: 'middlewares'
+}
