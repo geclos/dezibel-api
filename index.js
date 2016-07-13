@@ -10,10 +10,7 @@ server.connection({
   labels: [ 'api' ]
 })
 
-server.register([
-  middlewares,
-  routes
-], err => {
+server.register([ middlewares, routes ], err => {
   if (err) throw err
 
   server.start((err) => {

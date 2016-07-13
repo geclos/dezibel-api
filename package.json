@@ -4,7 +4,6 @@
   "description": "api for dezibel",
   "main": "index.js",
   "scripts": {
-    "test": "ava",
     "build": "NODE_ENV=production node index",
     "start": "NODE_ENV=development nodemon index"
   },

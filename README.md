@@ -2,5 +2,5 @@
 In development. Auth & routing api layer.
 
 ##Usage
-Development: `npm run watch`
-Build: `npm start`
+Development: `npm start`
+Build: `npm run build`
