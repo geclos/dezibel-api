@@ -1,10 +1,12 @@
 const Joi = require('joi')
+const models = require('../models')
+const auth = require('../core').auth
 
 module.exports = [{
   method: 'POST',
   path: '/login',
   config: {
-    handler: (req, reply) => reply({token: 'success'}).code(200),
+    handler: auth.login,
     description: 'Login to dezibel API',
     tags: ['api'],
     plugins: {
@@ -12,8 +14,9 @@ module.exports = [{
         responses: {
           '200': {
             'description': 'Success',
-            'schema': Joi.object({ token: Joi.string() }).label('Result')
-          }
+            'schema': models.user
+          },
+          '401': models.response.unauthorized
         }
       }
     },

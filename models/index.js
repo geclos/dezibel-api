@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-module.exports.response = {
+exports.response = {
   unauthorized: {
     'description': 'Unauthorized',
     'schema': Joi.object({
@@ -15,8 +15,15 @@ module.exports.response = {
   }
 }
 
-module.exports.headers = {
+exports.headers = {
   authorization: Joi.object({
     'authorization': Joi.string().required()
   }).unknown()
 }
+
+exports.user = Joi.object({
+  hash: Joi.string(),
+  name: Joi.string(),
+  lastName: Joi.string(),
+  email: Joi.string().email().require()
+})
