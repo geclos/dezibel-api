@@ -8,9 +8,12 @@ bluebird.promisifyAll(redis.RedisClient.prototype)
 bluebird.promisifyAll(redis.Multi.prototype)
 
 exports.register = (server, options, next) => {
-  const client = redis.createClient(config.redis.port, config.redis.host, config.redis.options)
+  const client = redis.createClient(config.redis.port, config.redis.host)
   client.on('error', err => server.error('Error ' + err))
-  client.auth(config.redis.password)
+
+  if (config.redis.password) {
+    client.auth(config.redis.password)
+  }
 
   server.app.redis = client // it will be now accesible on any endpoint
   next()

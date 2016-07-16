@@ -5,7 +5,8 @@ const user = Joi.object({
   lastName: Joi.string(),
   id: Joi.number().required(),
   hash: Joi.string().required(),
-  email: Joi.string().email().require()
+  token: Joi.string().required(),
+  email: Joi.string().email().required()
 })
 
 const error = Joi.object({

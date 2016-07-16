@@ -1,6 +1,6 @@
 const Inert = require('inert')
 const Vision = require('vision')
-const pack = require('../package.json')
+const pack = require('../../package.json')
 const HapiSwagger = require('hapi-swagger')
 
 const swaggerOptions = {

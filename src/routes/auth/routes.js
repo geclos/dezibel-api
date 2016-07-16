@@ -1,6 +1,6 @@
 const Joi = require('joi')
-const models = require('../models')
-const auth = require('../core').auth
+const models = require('../../models')
+const auth = require('../../controllers').auth
 
 module.exports = [{
   method: 'POST',
