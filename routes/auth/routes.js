@@ -16,7 +16,14 @@ module.exports = [{
             'description': 'Success',
             'schema': models.user
           },
-          '401': models.response.unauthorized
+          '401': {
+            description: 'Unauthorized',
+            schema: models.error
+          },
+          '500': {
+            description: 'Runtime Error',
+            schema: models.error
+          }
         }
       }
     },

@@ -1,7 +1,7 @@
 const AuthBearer = require('hapi-auth-bearer-token')
 
 module.exports.register = (server, options, next) => {
-  server.register([AuthBearer], err => {
+  server.register(AuthBearer, err => {
     if (err) throw err
 
     // bearer token auth strategy

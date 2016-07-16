@@ -1,29 +1,26 @@
 const Joi = require('joi')
 
-exports.response = {
-  unauthorized: {
-    'description': 'Unauthorized',
-    'schema': Joi.object({
-      'error': Joi.string(),
-      'message': Joi.string(),
-      'statusCode': Joi.number()
-    })
-  },
-  defaultSuccess: {
-    'description': 'Success',
-    'schema': Joi.string().label('Result')
-  }
-}
-
-exports.headers = {
-  authorization: Joi.object({
-    'authorization': Joi.string().required()
-  }).unknown()
-}
-
-exports.user = Joi.object({
-  hash: Joi.string(),
+const user = Joi.object({
   name: Joi.string(),
   lastName: Joi.string(),
+  id: Joi.number().required(),
+  hash: Joi.string().required(),
   email: Joi.string().email().require()
 })
+
+const error = Joi.object({
+  'error': Joi.string(),
+  'message': Joi.string(),
+  'statusCode': Joi.number()
+})
+
+const authorization = Joi.string().required().description('bearer token')
+
+const headers = Joi.object({ authorization: authorization }).unknown()
+
+module.exports = {
+  user,
+  error,
+  headers,
+  authorization
+}
