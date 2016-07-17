@@ -2,3 +2,5 @@ language: node_js
 node_js:
   - "6"
   - "node"
+before_install:
+  - node-gyp rebuild
