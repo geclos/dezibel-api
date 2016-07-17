@@ -19,7 +19,7 @@ module.exports = [{
   handler: users.get,
   config: {
     description: 'get user[s]',
-    auth: 'bearer',
+    auth: 'jwt',
     tags: ['api'],
     plugins: {
       'hapi-swagger': {
@@ -38,7 +38,7 @@ module.exports = [{
         page: Joi.number()
       },
       params: {
-        id: Joi.string().description('user id')
+        id: Joi.number().description('user id')
       }
     }
   }
@@ -48,7 +48,6 @@ module.exports = [{
   handler: users.create,
   config: {
     description: 'create new user',
-    auth: 'bearer',
     tags: ['api'],
     plugins: {
       'hapi-swagger': {
@@ -75,7 +74,7 @@ module.exports = [{
   handler: users.update,
   config: {
     description: 'update user',
-    auth: 'bearer',
+    auth: 'jwt',
     tags: ['api'],
     plugins: {
       'hapi-swagger': {
@@ -95,7 +94,7 @@ module.exports = [{
       payload: Joi.object({
         name: Joi.string(),
         lastName: Joi.string(),
-        email: Joi.string().email().required()
+        email: Joi.string().email()
       }).required()
     }
   }
@@ -105,7 +104,7 @@ module.exports = [{
   handler: users.delete,
   config: {
     description: 'delete user',
-    auth: 'bearer',
+    auth: 'jwt',
     tags: ['api'],
     plugins: {
       'hapi-swagger': {

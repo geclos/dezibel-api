@@ -5,3 +5,9 @@ exports.login = (req, reply) => {
     .then(user => reply(user))
     .catch(err => reply(err).code(err.statusCode))
 }
+
+exports.loginWithOauth = (req, reply) => {
+  auth.loginWithOauth(req)
+    .then(user => reply(user))
+    .catch(err => reply(err).code(err.statusCode))
+}

@@ -9,9 +9,13 @@ const saltRounds = 10
 
 exports.get = req => new Promise((resolve, reject) => {
   const db = req.server.app.redis
+
   if (req.params.id) { // get user with id
     db.hgetallAsync(`user:${req.params.id}`)
-      .then(user => resolve(user))
+      .then(user => {
+        if (!user) return reject(error.create(204, 'No content'))
+        resolve(user)
+      })
       .catch(err => reject(error.create(500, err.message)))
   } else { // get all users (it is paginated)
     // get first 20 elements if no page and limit are specified
@@ -19,10 +23,15 @@ exports.get = req => new Promise((resolve, reject) => {
     const limit = req.query.limit || 20
     db.lrangeAsync('users', page * (limit - 1), (page + 1) * (limit - 1))
       .then(ids => {
+        if (!ids) return reject(error.create(204, 'No content'))
+
         const multi = db.multi()
         ids.forEach(id => multi.hgetallAsync(`user:${id}`))
         multi.execAsync()
-          .then(users => resolve(users))
+          .then(users => {
+            if (!users) return reject(error.create(204, 'No content'))
+            resolve(users)
+          })
           .catch(err => reject(error.create(500, err.message)))
       })
       .catch(err => reject(error.create(500, err.message)))
@@ -33,26 +42,32 @@ exports.create = req => new Promise((resolve, reject) => {
   const db = req.server.app.redis
   db.lindexAsync('users', -1) // get last user's id
     .then(id => {
-      if (!id) {
-        return reject(error.create(500, 'Unexpected error'))
-      }
+      if (!id) id = 0
 
-      hash(req.payload.password, saltRounds) // hash plain text password
-        .then(h => {
-          const user = {
-            id: parseInt(id) + 1,
-            email: req.payload.email,
-            name: req.payload.name || '',
-            lastName: req.payload.lastName || '',
-            hash: process.env.NODE_ENV === 'test' ? req.payload.password : h // this is for testing purposes
+      db.getAsync(`user:${req.payload.email}`)
+        .then(user => {
+          if (user) {
+            return reject(error.create(403, 'User already exists'))
           }
 
-          const multi = db.multi()
-          multi.hmset(`user:${user.id}`, user) // create user object
-          multi.rpush('users', user.id) // push user's id to list of user ids
-          multi.set(`user:${user.email}`, user.id) // create set: {[user.email]: [user.id]}
-          multi.execAsync()
-            .then(() => resolve(user))
+          hash(req.payload.password, saltRounds) // hash plain text password
+            .then(h => {
+              const user = {
+                id: (parseInt(id) + 1).toString(),
+                email: req.payload.email,
+                name: req.payload.name || '',
+                lastName: req.payload.lastName || '',
+                hash: process.env.NODE_ENV === 'test' ? req.payload.password : h // this is for testing purposes
+              }
+
+              const multi = db.multi()
+              multi.hmset(`user:${user.id}`, user) // create user object
+              multi.rpush('users', user.id) // push user's id to list of user ids
+              multi.set(`user:${user.email}`, user.id) // create set: {[user.email]: [user.id]}
+              multi.execAsync()
+                .then(() => resolve(user))
+                .catch(err => reject(error.create(500, err.message)))
+            })
             .catch(err => reject(error.create(500, err.message)))
         })
         .catch(err => reject(error.create(500, err.message)))
@@ -62,7 +77,7 @@ exports.create = req => new Promise((resolve, reject) => {
 
 exports.update = req => new Promise((resolve, reject) => {
   const db = req.server.app.redis
-  db.hgetallAsync(`user:${req.payload.id}`)
+  db.hgetallAsync(`user:${req.params.id}`)
     .then(user => {
       if (!user) {
         return reject(error.create(204, 'User not found'))

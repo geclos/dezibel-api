@@ -14,7 +14,14 @@ module.exports = [{
         responses: {
           '200': {
             'description': 'Success',
-            'schema': models.user
+            'schema': Joi.object({
+              name: Joi.string(),
+              lastName: Joi.string(),
+              id: Joi.number().required(),
+              hash: Joi.string().required(),
+              token: Joi.string().required(),
+              email: Joi.string().email().required()
+            })
           },
           '401': {
             description: 'Unauthorized',
@@ -30,8 +37,17 @@ module.exports = [{
     validate: {
       payload: Joi.object({
         email: Joi.string().email().required().description('user email'),
-        password: Joi.string().alphanum().min(8).max(30).required().description('user password')
+        password: Joi.string().alphanum().min(6).max(30).required().description('user password')
       }).required()
     }
+  }
+}, {
+  method: 'POST',
+  path: '/oauth/login',
+  config: {
+    tags: ['api'],
+    auth: 'facebook',
+    handler: auth.loginWithOauth,
+    description: 'Login to dezibel with oauth strategy'
   }
 }]

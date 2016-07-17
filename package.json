@@ -4,31 +4,37 @@
   "description": "api for dezibel",
   "main": "index.js",
   "scripts": {
+    "test": "NODE_ENV=test ava | tap-nyan",
+    "test:watch": "NODE_ENV=test ava --watch",
     "build": "NODE_ENV=production node src/index",
-    "start": "NODE_ENV=development nodemon src/index",
-    "test": "sh bin/create_test_environment.sh && NODE_ENV=test ava | tap-nyan",
-    "test:watch": "sh bin/create_test_environment.sh && NODE_ENV=test ava --watch"
+    "start": "NODE_ENV=development nodemon src/index"
   },
   "author": "Gerard Clos",
   "license": "ISC",
   "dependencies": {
     "async": "^2.0.0",
     "bcrypt": "^0.8.7",
+    "bell": "^7.9.3",
     "bluebird": "^3.4.1",
     "good": "^7.0.1",
     "good-console": "^6.1.2",
     "good-squeeze": "^4.0.0",
     "hapi": "^13.5.0",
     "hapi-auth-bearer-token": "^4.1.1",
+    "hapi-auth-jwt": "^4.0.0",
     "hapi-swagger": "^6.1.0",
+    "hat": "0.0.3",
     "inert": "^4.0.1",
     "joi": "^9.0.0",
+    "jsonwebtoken": "^7.1.6",
     "redis": "^2.6.2",
     "vision": "^4.1.0"
   },
   "devDependencies": {
     "ava": "^0.15.2",
+    "fakeredis": "^1.0.3",
     "nodemon": "^1.9.2",
+    "redis-mock": "^0.10.0",
     "tap-dot": "^1.0.5",
     "tap-nyan": "0.0.2"
   },

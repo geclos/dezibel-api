@@ -1,23 +1,43 @@
-const AuthBearer = require('hapi-auth-bearer-token')
+const oauth = require('../config').oauth
+const secret = require('../config').secret
 
-module.exports.register = (server, options, next) => {
-  server.register(AuthBearer, err => {
-    if (err) throw err
-
-    // bearer token auth strategy
-    server.auth.strategy('bearer', 'bearer-access-token', {
-      allowQueryToken: false,
-      allowMultipleHeaders: false,
-      validateFunc: (token, callback) => {
-        if (!token) callback(`Unexpected token ${typeof token}`)
-
-        // TODO: check if token is expired...
-
-        callback(null, true, {token: token})
+const validate = function (req, decodedToken, callback) {
+  req.server.app.redis.hgetallAsync(`user:${decodedToken.accountId}`)
+    .then(user => {
+      if (user) {
+        callback(undefined, true, user)
+      } else {
+        callback('Unauthorized', false, {})
       }
     })
+    .catch(err => callback(err, true, {}))
+}
 
-    next()
+module.exports.register = (server, options, next) => {
+  server.app.secret = secret // private secret to authenticate JSON web tokens
+
+  server.register(require('hapi-auth-jwt'), err => {
+    if (err) throw err
+
+    server.auth.strategy('jwt', 'jwt', {
+      key: server.app.secret,
+      validateFunction: validate,
+      verifyOptions: { algorithms: [ 'HS256' ] }
+    })
+
+    server.register(require('bell'), err => {
+      if (err) throw err
+
+      server.auth.strategy('facebook', 'bell', {
+        provider: 'facebook',
+        clientId: oauth.facebook.id,
+        clientSecret: oauth.facebook.secret,
+        password: server.app.secret,
+        isSecure: process.env.NODE_ENV === 'production'
+      })
+
+      next()
+    })
   })
 }
 
