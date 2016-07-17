@@ -42,10 +42,9 @@ module.exports = [{
     }
   }
 }, {
-  method: 'POST',
+  method: ['GET', 'POST'],
   path: '/oauth/login',
   config: {
-    tags: ['api'],
     auth: 'facebook',
     handler: auth.loginWithOauth,
     description: 'Login to dezibel with oauth strategy'

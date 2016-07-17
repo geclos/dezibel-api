@@ -23,7 +23,7 @@ test('should create user', t => {
 
 test('should login user', t => {
   const db = redis.createClient()
-  createUser(db, t)
+  return createUser(db, t)
     .then(u => {
       const req = {
         server: {app: {redis: db}},
@@ -37,9 +37,32 @@ test('should login user', t => {
     .catch(err => t.fail(err.message))
 })
 
+test('should login user with oauth', t => {
+  const db = redis.createClient()
+  return createUser(db, t)
+    .then(u => {
+      const req = {
+        server: {app: {redis: db}},
+        auth: {
+          isAuthenticated: true,
+          credentials: {
+            profile: {
+              email: mockUser.email
+            }
+          }
+        }
+      }
+
+      return auth.loginWithOauth(req)
+        .then(user => t.deepEqual(user, mockUser))
+        .catch(err => t.fail(err.message))
+    })
+    .catch(err => t.fail(err.message))
+})
+
 test('should get user', t => {
   const db = redis.createClient()
-  createUser(db, t)
+  return createUser(db, t)
     .then(u => {
       const req = {
         server: {app: {redis: db}},
@@ -55,10 +78,12 @@ test('should get user', t => {
 
 test('should get all users', t => {
   const db = redis.createClient()
-  createUser(db, t)
+  return createUser(db, t)
     .then(u => {
       const req = {
-        server: {app: {redis: db}}
+        server: {app: {redis: db}},
+        params: {},
+        query: {}
       }
 
       return users.get(req)
@@ -70,7 +95,7 @@ test('should get all users', t => {
 
 test('should update user', t => {
   const db = redis.createClient()
-  createUser(db, t)
+  return createUser(db, t)
     .then(u => {
       const req = {
         server: {app: {redis: db}},
@@ -87,7 +112,7 @@ test('should update user', t => {
 
 test('should delete user', t => {
   const db = redis.createClient()
-  createUser(db, t)
+  return createUser(db, t)
     .then(u => {
       const req = {
         params: {id: 1},

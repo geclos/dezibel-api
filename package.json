@@ -6,8 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test ava | tap-nyan",
     "test:watch": "NODE_ENV=test ava --watch",
-    "build": "NODE_ENV=production node src/index",
-    "start": "NODE_ENV=development nodemon src/index"
+    "start": "NODE_ENV=production node src/index",
+    "dev": "NODE_ENV=development nodemon src/index"
   },
   "author": "Gerard Clos",
   "license": "ISC",

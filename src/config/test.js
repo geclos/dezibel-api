@@ -5,7 +5,7 @@ exports.oauth = {
   }
 }
 
-exports.secret = 'ilovedezibel'
+exports.secret = '177e92c6ecf843a7ba2eeef179657b71'
 
 exports.redis = {
   port: 6379,

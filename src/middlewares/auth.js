@@ -1,3 +1,4 @@
+const Bell = require('bell')
 const oauth = require('../config').oauth
 const secret = require('../config').secret
 
@@ -25,7 +26,7 @@ module.exports.register = (server, options, next) => {
       verifyOptions: { algorithms: [ 'HS256' ] }
     })
 
-    server.register(require('bell'), err => {
+    server.register(Bell, err => {
       if (err) throw err
 
       server.auth.strategy('facebook', 'bell', {
