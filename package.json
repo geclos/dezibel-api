@@ -4,10 +4,10 @@
   "description": "api for dezibel",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test ava | tap-nyan",
-    "test:watch": "NODE_ENV=test ava --watch",
-    "start": "NODE_ENV=production node src/index",
-    "dev": "NODE_ENV=development nodemon src/index"
+    "test": "ava | tap-nyan",
+    "test:watch": "ava --watch",
+    "start": "nf start",
+    "dev": "nodemon src/index"
   },
   "author": "Gerard Clos",
   "license": "ISC",
@@ -33,6 +33,7 @@
   "devDependencies": {
     "ava": "^0.15.2",
     "fakeredis": "^1.0.3",
+    "foreman": "^1.4.1",
     "nodemon": "^1.9.2",
     "redis-mock": "^0.10.0",
     "tap-dot": "^1.0.5",
@@ -44,5 +45,8 @@
   "ava": {
     "tap": true,
     "concurrency": 5
+  },
+  "engines": {
+    "node": "6.3.0"
   }
 }
