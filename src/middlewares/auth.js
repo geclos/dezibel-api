@@ -13,7 +13,6 @@ const validate = function (req, decodedToken, callback) {
 }
 
 module.exports.register = (server, options, next) => {
-  console.log(process.env)
   server.app.secret = process.env.SECRET // private secret to authenticate JSON web tokens
 
   server.register(require('hapi-auth-jwt'), err => {
