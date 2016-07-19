@@ -1,6 +1,4 @@
 const Bell = require('bell')
-const oauth = require('../config').oauth
-const secret = require('../config').secret
 
 const validate = function (req, decodedToken, callback) {
   req.server.app.redis.hgetallAsync(`user:${decodedToken.accountId}`)
@@ -15,7 +13,7 @@ const validate = function (req, decodedToken, callback) {
 }
 
 module.exports.register = (server, options, next) => {
-  server.app.secret = secret // private secret to authenticate JSON web tokens
+  server.app.secret = process.env.SECRET // private secret to authenticate JSON web tokens
 
   server.register(require('hapi-auth-jwt'), err => {
     if (err) throw err
@@ -31,8 +29,8 @@ module.exports.register = (server, options, next) => {
 
       server.auth.strategy('facebook', 'bell', {
         provider: 'facebook',
-        clientId: oauth.facebook.id,
-        clientSecret: oauth.facebook.secret,
+        clientId: process.env.OAUTH_FACEBOOK_ID,
+        clientSecret: process.env.OAUTH_FACEBOOK_SECRET,
         password: server.app.secret,
         isSecure: process.env.NODE_ENV === 'production'
       })
