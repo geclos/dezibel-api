@@ -6,8 +6,8 @@
   "scripts": {
     "test": "ava | tap-nyan",
     "test:watch": "ava --watch",
-    "start": "nf start",
-    "dev": "nodemon src/index"
+    "dev": "nodemon src/index",
+    "start": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 src/index"
   },
   "author": "Gerard Clos",
   "license": "ISC",
