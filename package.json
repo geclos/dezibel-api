@@ -16,6 +16,7 @@
     "bcrypt": "^0.8.7",
     "bell": "^7.9.3",
     "bluebird": "^3.4.1",
+    "foreman": "1.4.1",
     "good": "^7.0.1",
     "good-console": "^6.1.2",
     "good-squeeze": "^4.0.0",
@@ -33,7 +34,6 @@
   "devDependencies": {
     "ava": "^0.15.2",
     "fakeredis": "^1.0.3",
-    "foreman": "^1.4.1",
     "nodemon": "^1.9.2",
     "redis-mock": "^0.10.0",
     "tap-dot": "^1.0.5",
