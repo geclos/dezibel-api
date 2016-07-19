@@ -4,8 +4,8 @@
   "description": "api for dezibel",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index",
     "test": "NODE_ENV=test ava | tap-nyan",
+    "watch": "heroku local -f Procfile.dev",
     "test:watch": "NODE_ENV=test ava --watch",
     "start": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 src/index"
   },
@@ -20,7 +20,6 @@
     "good-console": "^6.1.2",
     "good-squeeze": "^4.0.0",
     "hapi": "^13.5.0",
-    "hapi-auth-bearer-token": "^4.1.1",
     "hapi-auth-jwt": "^4.0.0",
     "hapi-swagger": "^6.1.0",
     "hat": "0.0.3",
@@ -37,7 +36,6 @@
     "foreman": "^1.4.1",
     "nodemon": "^1.9.2",
     "redis-mock": "^0.10.0",
-    "tap-dot": "^1.0.5",
     "tap-nyan": "0.0.2"
   },
   "standard": {
