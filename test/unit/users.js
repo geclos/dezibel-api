@@ -26,7 +26,12 @@ test('should login user', t => {
   return createUser(db, t)
     .then(u => {
       const req = {
-        server: {app: {redis: db}},
+        server: {
+          app: {
+            redis: db,
+            secret: 'password'
+          }
+        },
         payload: { email: mockUser.email, password: mockUser.hash }
       }
 
@@ -42,7 +47,12 @@ test('should login user with oauth', t => {
   return createUser(db, t)
     .then(u => {
       const req = {
-        server: {app: {redis: db}},
+        server: {
+          app: {
+            redis: db,
+            secret: 'password'
+          }
+        },
         auth: {
           isAuthenticated: true,
           credentials: {
@@ -65,7 +75,12 @@ test('should get user', t => {
   return createUser(db, t)
     .then(u => {
       const req = {
-        server: {app: {redis: db}},
+        server: {
+          app: {
+            redis: db,
+            secret: 'password'
+          }
+        },
         params: {id: 1}
       }
 
@@ -81,7 +96,12 @@ test('should get all users', t => {
   return createUser(db, t)
     .then(u => {
       const req = {
-        server: {app: {redis: db}},
+        server: {
+          app: {
+            redis: db,
+            secret: 'password'
+          }
+        },
         params: {},
         query: {}
       }
@@ -98,7 +118,12 @@ test('should update user', t => {
   return createUser(db, t)
     .then(u => {
       const req = {
-        server: {app: {redis: db}},
+        server: {
+          app: {
+            redis: db,
+            secret: 'password'
+          }
+        },
         params: {id: 1},
         payload: Object.assign({}, mockUser, { name: 'changed!' })
       }
@@ -116,7 +141,12 @@ test('should delete user', t => {
     .then(u => {
       const req = {
         params: {id: 1},
-        server: {app: {redis: db}}
+        server: {
+          app: {
+            redis: db,
+            secret: 'password'
+          }
+        }
       }
 
       return users.delete(req)
@@ -128,7 +158,12 @@ test('should delete user', t => {
 
 function createUser (db, t) {
   const req = {
-    server: {app: {redis: db}},
+    server: {
+      app: {
+        redis: db,
+        secret: 'password'
+      }
+    },
     payload: Object.assign({}, mockUser, {
       password: mockUser.hash,
       hash: undefined

@@ -4,9 +4,9 @@
   "description": "api for dezibel",
   "main": "index.js",
   "scripts": {
-    "test": "ava | tap-nyan",
     "dev": "nodemon src/index",
-    "test:watch": "ava --watch",
+    "test": "NODE_ENV=test ava | tap-nyan",
+    "test:watch": "NODE_ENV=test ava --watch",
     "start": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 src/index"
   },
   "author": "Gerard Clos",
