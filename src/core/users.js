@@ -23,7 +23,9 @@ exports.get = req => new Promise((resolve, reject) => {
     const limit = req.query.limit || 20
     db.lrangeAsync('users', page * (limit - 1), (page + 1) * (limit - 1))
       .then(ids => {
-        if (!ids) return reject(error.create(204, 'No content'))
+        if (!ids || !ids.length) {
+          return reject(error.create(204, 'No content'))
+        }
 
         const multi = db.multi()
         ids.forEach(id => multi.hgetallAsync(`user:${id}`))

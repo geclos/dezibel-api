@@ -51,7 +51,7 @@ exports.login = req => new Promise((resolve, reject) => {
 
 exports.loginWithOauth = req => new Promise((resolve, reject) => {
   if (!req.auth.isAuthenticated) {
-    return reject(401, 'Authentication failed due to: ' + req.auth.error.message)
+    return reject(error.create(401, 'Authentication failed due to: ' + (req.auth.error ? req.auth.error.message : 'Unexpected error')))
   }
 
   const db = req.server.app.redis

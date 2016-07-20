@@ -3,6 +3,7 @@ exports.register = (server, options, next) => {
     require('./auth'),
     require('./logger'),
     require('./swagger'),
+    require('blipp'),
     require('./db')
   ], err => {
     if (err) throw err
