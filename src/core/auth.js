@@ -5,6 +5,7 @@ const error = require('../utils/error')
 
 // converts callback-based bcrypt.compare function
 // into a promise-based function
+
 const compare = bluebird.promisify(bcrypt.compare)
 
 exports.login = req => new Promise((resolve, reject) => {
