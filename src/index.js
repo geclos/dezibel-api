@@ -1,6 +1,8 @@
 const Hapi = require('hapi')
 const throng = require('throng')
 const routes = require('./routes')
+const models = require('./models')
+const controllers = require('./controllers')
 const middlewares = require('./middlewares')
 
 let WORKERS
@@ -25,7 +27,12 @@ function start () {
     labels: [ 'api' ]
   })
 
-  server.register([ middlewares, routes ], err => {
+  server.register([
+    middlewares,
+    controllers,
+    models,
+    routes
+  ], err => {
     if (err) throw err
 
     server.start((err) => {

@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const bluebird = require('bluebird')
 const error = require('../utils/error')
 
-// converts callback-based bcrypt.compare function
+// converts callback-based bcrypt.hash function
 // into a promise-based function
 const hash = bluebird.promisify(bcrypt.hash)
 const saltRounds = 10

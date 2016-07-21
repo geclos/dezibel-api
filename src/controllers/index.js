@@ -1,6 +1,11 @@
-const controllers = {}
+const controllers = {
+  auth: require('./auth'),
+  users: require('./users')
+}
 
-controllers.auth = require('./auth')
-controllers.users = require('./users')
+exports.register = (server, options, next) => {
+  server.expose('controllers', controllers)
+  next()
+}
 
-module.exports = controllers
+exports.register.attributes = { name: 'controllers' }
