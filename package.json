@@ -4,10 +4,10 @@
   "description": "api for dezibel",
   "main": "index.js",
   "scripts": {
-    "report": "nyc report --reporter=html",
     "watch": "heroku local -f Procfile.dev",
     "test:watch": "NODE_ENV=test ava --watch",
     "test": "NODE_ENV=test nyc ava | tap-nyan",
+    "report": "nyc report --reporter=html --cache",
     "start": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 src/index"
   },
   "author": "Gerard Clos",
