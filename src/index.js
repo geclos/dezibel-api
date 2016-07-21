@@ -3,12 +3,17 @@ const throng = require('throng')
 const routes = require('./routes')
 const middlewares = require('./middlewares')
 
-const WORKERS = process.env.WEB_CONCURRENCY || 1
+let WORKERS
+try {
+  WORKERS = process.env.WEB_CONCURRENCY || require('os').cpus().length
+} catch (e) {
+  // do nothing
+}
 
 throng({
   start,
-  workers: WORKERS,
-  lifetime: Infinity
+  lifetime: Infinity,
+  workers: WORKERS || 1
 })
 
 function start () {
