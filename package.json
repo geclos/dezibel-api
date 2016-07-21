@@ -30,6 +30,7 @@
     "jsonwebtoken": "^7.1.6",
     "redis": "^2.6.2",
     "throng": "^4.0.0",
+    "tv": "^5.0.2",
     "vision": "^4.1.0"
   },
   "devDependencies": {
