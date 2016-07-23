@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const bluebird = require('bluebird')
-const error = require('../utils/error')
+const error = require('../shared/constants').error
 
 // converts callback-based bcrypt.hash function
 // into a promise-based function
@@ -59,13 +59,17 @@ exports.create = req => new Promise((resolve, reject) => {
                 email: req.payload.email,
                 name: req.payload.name || '',
                 lastName: req.payload.lastName || '',
-                hash: process.env.NODE_ENV === 'test' ? req.payload.password : h // this is for testing purposes
+                hash: process.env.NODE_ENV === 'test' ? req.payload.password : h // don't hash password on testing
               }
 
               const multi = db.multi()
-              multi.hmset(`user:${user.id}`, user) // create user object
-              multi.rpush('users', user.id) // push user's id to list of user ids
-              multi.set(`user:${user.email}`, user.id) // create set: {[user.email]: [user.id]}
+
+              // all operations required on user creation
+              multi.rpush('users', user.id)
+              multi.hmset(`user:${user.id}`, user)
+              multi.set(`user:${user.email}`, user.id)
+              multi.sadd(`user:${user.id}:roles`, req.params.userType || 'USER')
+
               multi.execAsync()
                 .then(() => resolve(user))
                 .catch(err => reject(error.create(500, err.message)))

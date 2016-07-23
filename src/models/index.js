@@ -19,10 +19,34 @@ exports.register = (server, options, next) => {
 
   const headers = Joi.object({ authorization: authorization }).unknown()
 
+  const responses = {
+    204: {
+      description: 'Content not found',
+      schema: error
+    },
+    400: {
+      description: 'Invalid request payload',
+      schema: error
+    },
+    401: {
+      description: 'Unauthorized',
+      schema: error
+    },
+    403: {
+      description: 'Forbidden',
+      schema: error
+    },
+    500: {
+      description: 'Runtime error',
+      schema: error
+    }
+  }
+
   server.expose('models', {
     user,
     error,
     headers,
+    responses,
     authorization
   })
 
