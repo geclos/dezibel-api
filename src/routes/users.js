@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const roles = require('../shared/constants').roles.slice(1)
 
 exports.register = (server, options, next) => {
   const controllers = server.plugins['controllers'].controllers
@@ -61,7 +62,7 @@ exports.register = (server, options, next) => {
           password: Joi.string().alphanum().min(6).max(30).required()
         }).required(),
         params: {
-          userType: Joi.string().description('user type: \'user\', \'band\', \'venue\'. Defaults to \'user\'.')
+          userType: Joi.string().valid(roles).description('user type: \'user\', \'band\', \'venue\'. Defaults to \'user\'.')
         }
       }
     }
