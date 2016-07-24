@@ -165,6 +165,7 @@ function createUser (db, t) {
         secret: 'password'
       }
     },
+    params: {},
     payload: Object.assign({}, mockUser, {
       password: mockUser.hash,
       hash: undefined
