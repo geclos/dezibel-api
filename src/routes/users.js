@@ -42,6 +42,7 @@ exports.register = (server, options, next) => {
     config: {
       description: 'create new user',
       tags: ['api'],
+      auth: false,
       plugins: {
         'hapi-swagger': {
           responses: Object.assign({}, models.responses, {
