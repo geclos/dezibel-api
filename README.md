@@ -2,7 +2,3 @@
 
 #Dezible API
 Auth & routing api layer.
-
-TODO:
-1. Add roles
-2. Cannot delete yourself
