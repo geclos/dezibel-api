@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const bluebird = require('bluebird')
 const error = require('../shared/constants').error
+const roles = require('../shared/constants').roles
 
 // converts callback-based bcrypt.hash function
 // into a promise-based function
@@ -42,6 +43,13 @@ exports.get = req => new Promise((resolve, reject) => {
 
 exports.create = req => new Promise((resolve, reject) => {
   const db = req.server.app.redis
+
+  // if user type provided is not valid,
+  // return error
+  if (req.params.userType && !roles.find(req.params.userType)) {
+    return reject(error.create(400, 'Invalid user type'))
+  }
+
   db.lindexAsync('users', -1) // get last user's id
     .then(id => {
       if (!id) id = 0
@@ -68,7 +76,7 @@ exports.create = req => new Promise((resolve, reject) => {
               multi.rpush('users', user.id)
               multi.hmset(`user:${user.id}`, user)
               multi.set(`user:${user.email}`, user.id)
-              multi.sadd(`user:${user.id}:roles`, req.params.userType || 'USER')
+              multi.set(`user:${user.id}:role`, req.params.userType || 'USER')
 
               multi.execAsync()
                 .then(() => resolve(user))
