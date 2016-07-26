@@ -5,9 +5,12 @@ const models = require('./models')
 const controllers = require('./controllers')
 const middlewares = require('./middlewares')
 
-let WORKERS
+if (process.env.NODE_ENV === 'development') {
+  require('node-env-file')('.env')
+}
+
 try {
-  WORKERS = process.env.WEB_CONCURRENCY || require('os').cpus().length
+  var WORKERS = process.env.WEB_CONCURRENCY || require('os').cpus().length
 } catch (e) {
   // do nothing
 }
@@ -15,7 +18,7 @@ try {
 throng({
   start,
   lifetime: Infinity,
-  workers: WORKERS || 1
+  workers: process.env.NODE_ENV === 'development' ? 1 : (WORKERS || 1)
 })
 
 function start () {
