@@ -1,7 +1,6 @@
 const createRedisClient = require('../helpers').createRedisClient
 const users = require('../../src/core').users
 const auth = require('../../src/core').auth
-const sinon = require('sinon')
 const test = require('ava')
 
 const mockUser = {
@@ -165,6 +164,7 @@ function createUser (db, t) {
         secret: 'password'
       }
     },
+    params: {},
     payload: Object.assign({}, mockUser, {
       password: mockUser.hash,
       hash: undefined

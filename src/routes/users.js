@@ -1,27 +1,9 @@
 const Joi = require('joi')
+const roles = require('../shared/constants').roles.slice(1)
 
 exports.register = (server, options, next) => {
   const controllers = server.plugins['controllers'].controllers
   const models = server.plugins['models'].models
-
-  const responses = {
-    204: {
-      description: 'Content not found',
-      schema: models.error
-    },
-    400: {
-      description: 'Invalid request payload',
-      schema: models.error
-    },
-    401: {
-      description: 'Unauthorized',
-      schema: models.error
-    },
-    500: {
-      description: 'Runtime error',
-      schema: models.error
-    }
-  }
 
   server.select('api').route([{
     path: '/{id?}',
@@ -29,16 +11,18 @@ exports.register = (server, options, next) => {
     handler: controllers.users.get,
     config: {
       description: 'get user[s]',
-      auth: 'jwt',
       tags: ['api'],
       plugins: {
         'hapi-swagger': {
-          responses: Object.assign({}, responses, {
+          responses: Object.assign({}, models.responses, {
             '200': {
               description: 'Success',
               schema: Joi.array().items(models.user)
             }
           })
+        },
+        hapiAuthorization: {
+          role: 'ADMIN'
         }
       },
       validate: {
@@ -53,15 +37,16 @@ exports.register = (server, options, next) => {
       }
     }
   }, {
-    path: '/',
+    path: '/{userType?}',
     method: 'POST',
     handler: controllers.users.create,
     config: {
       description: 'create new user',
       tags: ['api'],
+      auth: false,
       plugins: {
         'hapi-swagger': {
-          responses: Object.assign({}, responses, {
+          responses: Object.assign({}, models.responses, {
             '200': {
               description: 'Success',
               schema: models.user
@@ -70,11 +55,14 @@ exports.register = (server, options, next) => {
         }
       },
       validate: {
-        payload: {
+        payload: Joi.object({
           name: Joi.string(),
           lastName: Joi.string(),
           email: Joi.string().email().required(),
           password: Joi.string().alphanum().min(6).max(30).required()
+        }).required(),
+        params: {
+          userType: Joi.string().valid(roles).description('user type: \'user\', \'band\', \'venue\'. Defaults to \'user\'.')
         }
       }
     }
@@ -84,22 +72,24 @@ exports.register = (server, options, next) => {
     handler: controllers.users.update,
     config: {
       description: 'update user',
-      auth: 'jwt',
       tags: ['api'],
       plugins: {
         'hapi-swagger': {
-          responses: Object.assign({}, responses, {
+          responses: Object.assign({}, models.responses, {
             '200': {
               description: 'Success',
               schema: models.user
             }
           })
+        },
+        'hapi-authorization': {
+          role: 'ADMIN'
         }
       },
       validate: {
         headers: models.headers,
         params: {
-          id: Joi.number().required()
+          id: Joi.number().required().description('user id')
         },
         payload: Joi.object({
           name: Joi.string(),
@@ -114,22 +104,24 @@ exports.register = (server, options, next) => {
     handler: controllers.users.delete,
     config: {
       description: 'delete user',
-      auth: 'jwt',
       tags: ['api'],
       plugins: {
         'hapi-swagger': {
-          responses: Object.assign({}, responses, {
+          responses: Object.assign({}, models.responses, {
             '200': {
               description: 'Success',
               schema: models.user
             }
           })
+        },
+        'hapi-authorization': {
+          role: 'ADMIN'
         }
       },
       validate: {
         headers: models.headers,
         params: {
-          id: Joi.number().required()
+          id: Joi.number().required().description('user id')
         }
       }
     }

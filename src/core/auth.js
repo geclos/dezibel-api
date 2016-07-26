@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const bluebird = require('bluebird')
-const error = require('../utils/error')
+const error = require('../shared/constants').error
 
 // converts callback-based bcrypt.compare function
 // into a promise-based function

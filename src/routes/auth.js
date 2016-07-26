@@ -11,6 +11,7 @@ exports.register = (server, options, next) => {
       handler: controllers.auth.login,
       description: 'Login to dezibel API',
       tags: ['api'],
+      auth: false,
       plugins: {
         'hapi-swagger': {
           responses: {

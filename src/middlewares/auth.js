@@ -1,8 +1,19 @@
+const roles = require('../shared/constants').roles
+
 const validate = (req, decodedToken, callback) => {
-  req.server.app.redis.hgetallAsync(`user:${decodedToken.accountId}`)
-    .then(user => {
-      if (user) callback(null, true, user)
-      else callback(null, false)
+  Promise.all([
+    req.server.app.redis.hgetallAsync(`user:${decodedToken.accountId}`),
+    req.server.app.redis.getAsync(`user:${decodedToken.accountId}:role`)
+  ])
+    .then(results => {
+      const user = results[0]
+      const role = results[1]
+
+      if (!user || !role) {
+        callback(null, false)
+      } else {
+        callback(null, true, {user, role})
+      }
     })
     .catch(() => callback(null, false))
 }
@@ -12,7 +23,14 @@ exports.register = (server, options, next) => {
 
   server.register([
     require('bell'),
-    require('hapi-auth-jwt')
+    require('hapi-auth-jwt'),
+    {
+      register: require('hapi-authorization'),
+      options: {
+        roles,
+        hierarchy: true
+      }
+    }
   ], err => {
     if (err) throw err
 
@@ -29,6 +47,10 @@ exports.register = (server, options, next) => {
       clientSecret: process.env.OAUTH_FACEBOOK_SECRET,
       isSecure: process.env.NODE_ENV === 'production'
     })
+
+    // all routes we'll use this auth strategy by default
+    // set config.auth property of route to false
+    server.auth.default('jwt')
 
     next()
   })
