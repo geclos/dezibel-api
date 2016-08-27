@@ -2,12 +2,13 @@
   "name": "dezibel-api",
   "version": "1.0.0",
   "description": "api for dezibel",
+  "repository": "git@github.com:geclos/dezibel-api.git",
   "main": "src/index.js",
   "scripts": {
+    "start": "nodemon src/index.js",
     "test:watch": "NODE_ENV=test ava --watch",
     "test": "NODE_ENV=test nyc ava | tap-nyan",
     "report": "nyc report --reporter=html --cache",
-    "start": "NODE_ENV=development nodemon src/index",
     "build": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 src/index"
   },
   "author": "Gerard Clos",
@@ -30,8 +31,10 @@
     "inert": "^4.0.1",
     "joi": "^9.0.0",
     "jsonwebtoken": "^7.1.6",
+    "neo4j": "^2.0.0-RC2",
     "node-env-file": "^0.1.8",
     "redis": "^2.6.2",
+    "seraph": "^0.15.2",
     "throng": "^4.0.0",
     "tv": "^5.0.2",
     "vision": "^4.1.0"

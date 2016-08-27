@@ -1,0 +1,16 @@
+{
+  "env": {
+    "PORT": 3000,
+    "__DEV__": true,
+    "SECRET": "marvin",
+    "REDIS_PORT": 6379,
+    "REDIS_HOST": "localhost",
+    "NODE_ENV": "development",
+    "OAUTH_FACEBOOK_ID": "placeholder",
+    "OAUTH_FACEBOOK_SECRET": "placeholder",
+    "GRAPHENE_PORT": 7474,
+    "GRAPHENE_PASSWORD": "1234",
+    "GRAPHENE_HOST": "localhost",
+    "GRAPHENE_USERNAME": "neo4j"
+  }
+}

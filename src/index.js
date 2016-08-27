@@ -5,10 +5,6 @@ const models = require('./models')
 const controllers = require('./controllers')
 const middlewares = require('./middlewares')
 
-if (process.env.NODE_ENV === 'development') {
-  require('node-env-file')('.env')
-}
-
 try {
   var WORKERS = process.env.WEB_CONCURRENCY || require('os').cpus().length
 } catch (e) {

@@ -15,8 +15,7 @@ exports.login = req => new Promise((resolve, reject) => {
       if (!id) {
         return reject(error.create(
           401,
-          'User not found',
-          'Unauthorized'
+          'User not found'
         ))
       }
 
@@ -32,13 +31,12 @@ exports.login = req => new Promise((resolve, reject) => {
           if (!areEqual) {
             return reject(error.create(
               401,
-              'Incorrect password',
-              'Unauthorized'
+              'Incorrect password'
             ))
           }
 
           resolve(Object.assign({}, user, {
-            token: jwt.sign({accountId: user.id}, req.server.app.secret, {
+            token: jwt.sign({accountId: user.uid}, req.server.app.secret, {
               algorithm: 'HS256',
               expiresIn: '7 days'
             })
@@ -62,8 +60,7 @@ exports.loginWithOauth = req => new Promise((resolve, reject) => {
       if (!id) {
         return reject(error.create(
           401,
-          'User not found',
-          'Unauthorized'
+          'User not found'
         ))
       }
 
@@ -75,7 +72,7 @@ exports.loginWithOauth = req => new Promise((resolve, reject) => {
       }
 
       resolve(Object.assign({}, user, {
-        token: jwt.sign({accountId: user.id}, req.server.app.secret, {
+        token: jwt.sign({accountId: user.uid}, req.server.app.secret, {
           algorithm: 'HS256',
           expiresIn: '7 days'
         })

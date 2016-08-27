@@ -1,4 +1,4 @@
-exports.roles = [
+const roles = exports.roles = [
   'ADMIN',
   'VENUE',
   'BAND',
@@ -6,9 +6,28 @@ exports.roles = [
 ]
 
 exports.error = {
-  create: (code, message, error) => ({
-    statusCode: code,
-    error: error || message,
-    message
-  })
+  204: 'Resource not found',
+  401: 'Unauthenticated',
+  403: 'Unauthorized',
+  404: 'Not found',
+  500: 'Internal server error',
+  create: function (code, message) {
+    return {
+      error: this[code] || 'Unknown',
+      statusCode: code,
+      message: message
+    }
+  }
+}
+
+exports.getValidUserType = userType => {
+  if (userType == null || typeof userType !== 'string') {
+    return undefined
+  }
+
+  if (roles.indexOf(userType.toUpperCase()) > -1) {
+    return userType.toUpperCase()
+  } else {
+    return undefined
+  }
 }
