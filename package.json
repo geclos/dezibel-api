@@ -2,7 +2,7 @@
   "name": "dezibel-api",
   "version": "1.0.0",
   "description": "api for dezibel",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "watch": "heroku local -f Procfile.dev",
     "test:watch": "NODE_ENV=test ava --watch",
