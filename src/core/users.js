@@ -16,7 +16,7 @@ exports.get = req => new Promise((resolve, reject) => {
       req.auth.credentials.role !== 'ADMIN' &&
       req.auth.credentials.user.uid !== req.params.id.toString()
     ) {
-      return reject(error.create(403, 'Unauthorized'))
+      return reject(error.create(403, 'Forbidden'))
     }
 
     redis.hgetallAsync(`user:${req.params.id}`)
@@ -27,7 +27,7 @@ exports.get = req => new Promise((resolve, reject) => {
       .catch(err => reject(error.create(500, err.message)))
   } else { // get all users (it is paginated)
     if (req.auth.credentials.role !== 'ADMIN') {
-      return reject(error.create(403, 'Unauthorized'))
+      return reject(error.create(403, 'Forbidden'))
     }
 
     // get first 20 elements if no page and limit are specified
@@ -114,7 +114,7 @@ exports.update = req => new Promise((resolve, reject) => {
     req.auth.credentials.role !== 'ADMIN' &&
     req.auth.credentials.user.uid !== req.params.id.toString()
   ) {
-    return reject(error.create(403, 'Unauthorized'))
+    return reject(error.create(403, 'Forbidden'))
   }
 
   const redis = req.server.app.redis
@@ -160,7 +160,7 @@ exports.delete = req => new Promise((resolve, reject) => {
     req.auth.credentials.role !== 'ADMIN' &&
     req.auth.credentials.user.uid !== req.params.id.toString()
   ) {
-    return reject(error.create(403, 'Unauthorized'))
+    return reject(error.create(403, 'Forbidden'))
   }
 
   const redis = req.server.app.redis
@@ -179,13 +179,14 @@ exports.delete = req => new Promise((resolve, reject) => {
       }
 
       const multi = redis.multi()
-      redis.del(`user:${user.email}`)
-      redis.del(`user:${user.uid}`)
-      redis.lrem('users', 1, user.uid)
+      multi.del(`user:${user.uid}`)
+      multi.del(`user:${user.email}`)
+      multi.del(`user:${user.uid}:role`)
+      multi.lrem('users', 1, user.uid)
 
       Promise.all([
         multi.execAsync(),
-        graph.delete(nodes[0])
+        graph.deleteAsync(nodes[0])
       ])
         .then(res => resolve(user))
         .catch(err => reject(error.create(500, err.message)))

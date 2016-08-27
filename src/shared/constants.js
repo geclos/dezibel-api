@@ -7,15 +7,15 @@ const roles = exports.roles = [
 
 exports.error = {
   204: 'Resource not found',
-  401: 'Unauthenticated',
-  403: 'Unauthorized',
+  401: 'Unauthorized',
+  403: 'Forbidden',
   404: 'Not found',
   500: 'Internal server error',
   create: function (code, message) {
     return {
       error: this[code] || 'Unknown',
-      statusCode: code,
-      message: message
+      message: message || '',
+      statusCode: code
     }
   }
 }

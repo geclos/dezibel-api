@@ -93,8 +93,7 @@ exports.register = (server, options, next) => {
         },
         payload: Joi.object({
           name: Joi.string(),
-          lastName: Joi.string(),
-          email: Joi.string().email()
+          lastName: Joi.string()
         }).required()
       }
     }
