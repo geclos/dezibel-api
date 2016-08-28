@@ -77,7 +77,7 @@ test.serial('should get user', t => {
     },
     auth: {
       credentials: {
-        role: "ADMIN"
+        role: 'ADMIN'
       }
     },
     params: {id: 1}
@@ -99,7 +99,7 @@ test.serial('should get all users', t => {
     },
     auth: {
       credentials: {
-        role: "ADMIN"
+        role: 'ADMIN'
       }
     },
     params: {},
@@ -122,7 +122,7 @@ test.serial('should update user', t => {
     },
     auth: {
       credentials: {
-        role: "ADMIN"
+        role: 'ADMIN'
       }
     },
     params: {id: 1},
@@ -146,7 +146,7 @@ test.serial('should delete user', t => {
     },
     auth: {
       credentials: {
-        role: "ADMIN"
+        role: 'ADMIN'
       }
     }
   }
