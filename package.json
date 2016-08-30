@@ -31,6 +31,7 @@
     "inert": "^4.0.1",
     "joi": "^9.0.0",
     "jsonwebtoken": "^7.1.6",
+    "mongodb": "^2.2.8",
     "neo4j": "^2.0.0-RC2",
     "node-env-file": "^0.1.8",
     "redis": "^2.6.2",
