@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const bluebird = require('bluebird')
-const error = require('../shared/constants').error
+const error = require('../utils/error')
 
 // converts callback-based bcrypt.hash function
 // into a promise-based function
@@ -9,6 +9,7 @@ const saltRounds = 10
 
 exports.get = req => new Promise((resolve, reject) => {
   const db = req.server.app.redis
+  const catchUnknownErrors = err => reject(error.unknown(err))
 
   if (req.params.id) { // get user with id
     if (
@@ -23,7 +24,7 @@ exports.get = req => new Promise((resolve, reject) => {
         if (!user) return reject(error.create(204, 'No content'))
         resolve(user)
       })
-      .catch(err => reject(error.create(500, err.message)))
+      .catch(catchUnknownErrors)
   } else { // get all users (it is paginated)
     if (req.auth.credentials.role !== 'ADMIN') {
       return reject(error.create(403, 'Forbidden'))
@@ -45,14 +46,15 @@ exports.get = req => new Promise((resolve, reject) => {
             if (!users) return reject(error.create(204, 'No content'))
             resolve(users)
           })
-          .catch(err => reject(error.create(500, err.message)))
+          .catch(catchUnknownErrors)
       })
-      .catch(err => reject(error.create(500, err.message)))
+      .catch(catchUnknownErrors)
   }
 })
 
 exports.create = req => new Promise((resolve, reject) => {
   const db = req.server.app.redis
+  const catchUnknownErrors = err => reject(error.unknown(err))
 
   db.lindexAsync('users', -1) // get last user's id
     .then(id => {
@@ -84,13 +86,13 @@ exports.create = req => new Promise((resolve, reject) => {
 
               multi.execAsync()
                 .then(() => resolve(user))
-                .catch(err => reject(error.create(500, err.message)))
+                .catch(catchUnknownErrors)
             })
-            .catch(err => reject(error.create(500, err.message)))
+            .catch(catchUnknownErrors)
         })
-        .catch(err => reject(error.create(500, err.message)))
+        .catch(catchUnknownErrors)
     })
-    .catch(err => reject(error.create(500, err.message)))
+    .catch(catchUnknownErrors)
 })
 
 exports.update = req => new Promise((resolve, reject) => {
@@ -102,6 +104,8 @@ exports.update = req => new Promise((resolve, reject) => {
   }
 
   const db = req.server.app.redis
+  const catchUnknownErrors = err => reject(error.unknown(err))
+
   db.hgetallAsync(`user:${req.params.id}`)
     .then(user => {
       if (!user) {
@@ -116,9 +120,9 @@ exports.update = req => new Promise((resolve, reject) => {
 
       db.hmsetAsync(`user:${user.id}`, newUser)
         .then(user => resolve(newUser).code(201))
-        .catch(err => reject(error.create(500, err.message)))
+        .catch(catchUnknownErrors)
     })
-    .catch(err => reject(error.create(500, err.message)))
+    .catch(catchUnknownErrors)
 })
 
 exports.delete = req => new Promise((resolve, reject) => {
@@ -130,6 +134,8 @@ exports.delete = req => new Promise((resolve, reject) => {
   }
 
   const db = req.server.app.redis
+  const catchUnknownErrors = err => reject(error.unknown(err))
+
   db.hgetallAsync(`user:${req.params.id}`)
     .then(user => {
       if (!user) {
@@ -142,7 +148,7 @@ exports.delete = req => new Promise((resolve, reject) => {
       db.lrem('users', 1, user.id)
       multi.execAsync()
         .then(res => resolve(user))
-        .catch(err => reject(error.create(500, err.message)))
+        .catch(catchUnknownErrors)
     })
-    .catch(err => reject(error.create(500, err.message)))
+    .catch(catchUnknownErrors)
 })

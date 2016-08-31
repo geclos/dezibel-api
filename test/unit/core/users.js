@@ -1,7 +1,7 @@
 const test = require('ava')
-const auth = require('../../src/core').auth
-const users = require('../../src/core').users
-const createRedisClient = require('../helpers').createRedisClient
+const auth = require('../../../src/core').auth
+const users = require('../../../src/core').users
+const createRedisClient = require('../../helpers').createRedisClient
 
 const mockUser = {
   id: '1',
