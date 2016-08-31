@@ -17,6 +17,7 @@ module.exports = {
 
   isValidError (err) {
     return (
+      err != null &&
       (err.error != null && typeof err.error === 'string') &&
       (err.message != null && typeof err.message === 'string') &&
       err.statusCode != null && typeof err.statusCode === 'number'

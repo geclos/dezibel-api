@@ -16,10 +16,6 @@ exports.login = req => new Promise((resolve, reject) => {
       return db.hgetallAsync(`user:${id}`)
     })
     .then(user => {
-      if (process.env.NODE_ENV === 'test') {
-        return resolve(user) // this is for testing purposes
-      }
-
       compare(req.payload.password, user.hash)
         .then(areEqual => {
           if (!areEqual) {
@@ -62,10 +58,6 @@ exports.loginWithOauth = req => new Promise((resolve, reject) => {
       return db.hgetallAsync(`user:${id}`)
     })
     .then(user => {
-      if (process.env.NODE_ENV === 'test') {
-        return resolve(user) // this is for testing purposes
-      }
-
       resolve(Object.assign({}, user, {
         token: jwt.sign({accountId: user.id}, req.server.app.secret, {
           algorithm: 'HS256',

@@ -12,10 +12,7 @@ exports.get = req => new Promise((resolve, reject) => {
   const catchUnknownErrors = err => reject(error.unknown(err))
 
   if (req.params.id) { // get user with id
-    if (
-      req.auth.credentials.role !== 'ADMIN' &&
-      req.auth.credentials.user.uid !== req.params.id.toString()
-    ) {
+    if (!hasPermissions(req.auth.credentials, req.params.id)) {
       return reject(error.create(403, 'Forbidden'))
     }
 
@@ -69,11 +66,11 @@ exports.create = req => new Promise((resolve, reject) => {
           hash(req.payload.password, saltRounds) // hash plain text password
             .then(h => {
               const user = {
-                id: (parseInt(id) + 1).toString(),
+                hash: h,
                 email: req.payload.email,
                 name: req.payload.name || '',
-                lastName: req.payload.lastName || '',
-                hash: process.env.NODE_ENV === 'test' ? req.payload.password : h // don't hash password on testing
+                id: (parseInt(id) + 1).toString(),
+                lastName: req.payload.lastName || ''
               }
 
               const multi = db.multi()
@@ -96,10 +93,7 @@ exports.create = req => new Promise((resolve, reject) => {
 })
 
 exports.update = req => new Promise((resolve, reject) => {
-  if (
-    req.auth.credentials.role !== 'ADMIN' &&
-    req.auth.credentials.user.uid !== req.params.id.toString()
-  ) {
+  if (!hasPermissions(req.auth.credentials, req.params.id)) {
     return reject(error.create(403, 'Forbidden'))
   }
 
@@ -126,10 +120,7 @@ exports.update = req => new Promise((resolve, reject) => {
 })
 
 exports.delete = req => new Promise((resolve, reject) => {
-  if (
-    req.auth.credentials.role !== 'ADMIN' &&
-    req.auth.credentials.user.uid !== req.params.id.toString()
-  ) {
+  if (!hasPermissions(req.auth.credentials, req.params.id)) {
     return reject(error.create(403, 'Forbidden'))
   }
 
@@ -152,3 +143,13 @@ exports.delete = req => new Promise((resolve, reject) => {
     })
     .catch(catchUnknownErrors)
 })
+
+const hasPermissions = (credentials, id) => {
+  return (
+    credentials &&
+    credentials.role &&
+    credentials.user &&
+    credentials.user.id &&
+    (credentials.role === 'ADMIN' || credentials.user.id === id.toString())
+  )
+}

@@ -30,3 +30,18 @@ test('should generate a valid error object from an Error instance', t => {
   const result = error.unknown(fooError)
   t.deepEqual(expected, result)
 })
+
+test('should return the input from a valid error object', t => {
+  const result = error.unknown(errorObject)
+  t.deepEqual(errorObject, result)
+})
+
+test('should return a valid error object from everything else', t => {
+  const expected = {
+    message: '',
+    statusCode: 500,
+    error: 'Internal server error'
+  }
+  const result = error.unknown(undefined)
+  t.deepEqual(expected, result)
+})
