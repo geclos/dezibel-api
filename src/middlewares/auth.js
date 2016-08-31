@@ -49,8 +49,7 @@ exports.register = (server, options, next) => {
     })
 
     // all routes we'll use this auth strategy by default
-    // set config.auth property of route to false if you prefer to user another
-    // strategy or none
+    // set config.auth property of route to false
     server.auth.default('jwt')
 
     next()

@@ -1,16 +1,10 @@
 const test = require('ava')
-const Promise = require('bluebird')
 const auth = require('../../src/core').auth
 const users = require('../../src/core').users
 const createRedisClient = require('../helpers').createRedisClient
-const graph = Promise.promisifyAll(require('seraph')({
-  server: 'http://localhost:7474',
-  user: 'neo4j',
-  pass: '1234'
-}))
 
 const mockUser = {
-  uid: '1',
+  id: '1',
   name: 'Gerard',
   lastName: 'Clos',
   hash: '12345678',
@@ -30,7 +24,6 @@ test.serial('should login user', t => {
     server: {
       app: {
         redis: db,
-        graph: graph,
         secret: 'password'
       }
     },
@@ -47,7 +40,6 @@ test.serial('should login user with oauth', t => {
     server: {
       app: {
         redis: db,
-        graph: graph,
         secret: 'password'
       }
     },
@@ -71,7 +63,6 @@ test.serial('should get user', t => {
     server: {
       app: {
         redis: db,
-        graph: graph,
         secret: 'password'
       }
     },
@@ -93,7 +84,6 @@ test.serial('should get all users', t => {
     server: {
       app: {
         redis: db,
-        graph: graph,
         secret: 'password'
       }
     },
@@ -116,7 +106,6 @@ test.serial('should update user', t => {
     server: {
       app: {
         redis: db,
-        graph: graph,
         secret: 'password'
       }
     },
@@ -140,7 +129,6 @@ test.serial('should delete user', t => {
     server: {
       app: {
         redis: db,
-        graph: graph,
         secret: 'password'
       }
     },
@@ -161,7 +149,6 @@ function createUser (db, t) {
     server: {
       app: {
         redis: db,
-        graph: graph,
         secret: 'password'
       }
     },

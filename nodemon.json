@@ -7,10 +7,6 @@
     "REDIS_HOST": "localhost",
     "NODE_ENV": "development",
     "OAUTH_FACEBOOK_ID": "placeholder",
-    "OAUTH_FACEBOOK_SECRET": "placeholder",
-    "GRAPHENE_PORT": 7474,
-    "GRAPHENE_PASSWORD": "1234",
-    "GRAPHENE_HOST": "localhost",
-    "GRAPHENE_USERNAME": "neo4j"
-  }
+    "OAUTH_FACEBOOK_SECRET": "placeholder"
+ }
 }
