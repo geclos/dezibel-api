@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const roles = require('../shared/constants').roles.slice(1)
 
 exports.register = (server, options, next) => {
   const user = Joi.object({
@@ -9,6 +10,16 @@ exports.register = (server, options, next) => {
     email: Joi.string().email().required()
   })
 
+  const userType = Joi.string().valid(roles).description('user type: \'user\', \'band\', \'venue\'. Defaults to \'user\'.')
+
+  const event = Joi.object({
+    title: Joi.string(),
+    hostedBy: Joi.number(),
+    description: Joi.string(),
+    timestamp: Joi.date().timestamp(),
+    bands: Joi.array().items(Joi.number())
+  })
+
   const error = Joi.object({
     'error': Joi.string(),
     'message': Joi.string(),
@@ -16,7 +27,6 @@ exports.register = (server, options, next) => {
   })
 
   const authorization = Joi.string().required().description('bearer token')
-
   const headers = Joi.object({ authorization: authorization }).unknown()
 
   const responses = {
@@ -42,12 +52,24 @@ exports.register = (server, options, next) => {
     }
   }
 
+  const ResponseSchema = schema => {
+    return Object.assign({}, responses, {
+      200: {
+        description: 'Success',
+        schema: schema || {}
+      }
+    })
+  }
+
   server.expose('models', {
     user,
+    event,
     error,
     headers,
+    userType,
     responses,
-    authorization
+    authorization,
+    ResponseSchema
   })
 
   next()

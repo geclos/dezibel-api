@@ -5,6 +5,13 @@ const events = require('../../../src/core').events
 const req = {
   server: {
     app: {}
+  },
+  auth: {
+    credentials: {
+      user: {
+        id: 1
+      }
+    }
   }
 }
 
@@ -18,7 +25,7 @@ const event = {
 
 let db
 test.before(t => {
-  return mongo.MongoClient.connect('mongodb://localhost:27017/test')
+  return mongo.MongoClient.connect('mongodb://localhost:27017/local')
     .then(database => {
       db = database
       req.server.app.mongo = db
@@ -73,7 +80,7 @@ test.serial('GET events', t => {
 
 test.serial('UPDATE event', t => {
   req.params.id = id
-  req.body = Object.assign({}, event, { hostedBy: 2 })
+  req.body = Object.assign({}, event, { title: 'foo' })
   return events.update(req)
     .then(ev => {
       delete req.body.id
@@ -84,7 +91,7 @@ test.serial('UPDATE event', t => {
 
 test.serial('should faild to UPDATE missing event', t => {
   req.params.id = 2
-  req.body = Object.assign({}, event, {hostedBy: 1})
+  req.body = event
   return events.update(req)
     .then(ev => t.fail())
     .catch(() => t.pass())
@@ -96,7 +103,7 @@ test.serial('DELETE event', t => {
     .then(ev => {
       delete ev._id
       delete event._id
-      event.hostedBy = 2
+      event.title = 'foo'
       t.deepEqual(ev, event)
     })
     .catch(err => t.fail(err.error))

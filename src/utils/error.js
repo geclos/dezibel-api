@@ -20,8 +20,8 @@ module.exports = {
 function create (code, message) {
   return {
     statusCode: code,
-    message: message || '',
-    error: codes[code] || 'Unknown'
+    error: codes[code] || 'Unknown',
+    message: message || (codes[code] || 'Unknown')
   }
 }
 

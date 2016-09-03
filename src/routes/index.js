@@ -4,6 +4,10 @@ exports.register = (server, options, next) => {
     {
       register: require('./users'),
       routes: { prefix: '/users' }
+    },
+    {
+      register: require('./events'),
+      routes: { prefix: '/events' }
     }
   ], err => {
     if (err) throw err

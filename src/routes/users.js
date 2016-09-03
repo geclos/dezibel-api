@@ -1,58 +1,67 @@
 const Joi = require('joi')
-const roles = require('../shared/constants').roles.slice(1)
 
 exports.register = (server, options, next) => {
-  const controllers = server.plugins['controllers'].controllers
   const models = server.plugins['models'].models
+  const users = server.plugins['controllers'].controllers.users
+
+  const hapiAuthorization = { role: 'USER' }
+  const responseSchema = models.ResponseSchema(models.user)
+  const paramsSchema = {id: Joi.number().required().description('user id')}
 
   server.select('api').route([{
-    path: '/{id?}',
+    path: '/',
     method: 'GET',
-    handler: controllers.users.get,
+    handler: users.get,
     config: {
-      description: 'get user[s]',
+      description: 'get users',
       tags: ['api'],
       plugins: {
+        hapiAuthorization: {role: 'ADMIN'},
         'hapi-swagger': {
-          responses: Object.assign({}, models.responses, {
-            '200': {
-              description: 'Success',
-              schema: Joi.array().items(models.user)
-            }
-          })
-        },
-        hapiAuthorization: {
-          role: 'ADMIN'
+          responses: models.ResponseSchema(models.user)
         }
       },
       validate: {
+        params: paramsSchema,
         headers: models.headers,
         query: {
           limit: Joi.number(),
           page: Joi.number()
-        },
-        params: {
-          id: Joi.number().description('user id')
+        }
+      }
+    }
+  }, {
+    path: '/{id}',
+    method: 'GET',
+    handler: users.get,
+    config: {
+      description: 'get user',
+      tags: ['api'],
+      plugins: {
+        hapiAuthorization,
+        'hapi-swagger': {
+          responses: models.ResponseSchema(Joi.array().items(models.user))
+        }
+      },
+      validate: {
+        params: paramsSchema,
+        headers: models.headers,
+        query: {
+          limit: Joi.number(),
+          page: Joi.number()
         }
       }
     }
   }, {
     path: '/{userType?}',
     method: 'POST',
-    handler: controllers.users.create,
+    handler: users.create,
     config: {
       description: 'create new user',
       tags: ['api'],
       auth: false,
       plugins: {
-        'hapi-swagger': {
-          responses: Object.assign({}, models.responses, {
-            '200': {
-              description: 'Success',
-              schema: models.user
-            }
-          })
-        }
+        'hapi-swagger': { responses: responseSchema }
       },
       validate: {
         payload: Joi.object({
@@ -61,36 +70,23 @@ exports.register = (server, options, next) => {
           email: Joi.string().email().required(),
           password: Joi.string().alphanum().min(6).max(30).required()
         }).required(),
-        params: {
-          userType: Joi.string().valid(roles).description('user type: \'user\', \'band\', \'venue\'. Defaults to \'user\'.')
-        }
+        params: { userType: models.userType }
       }
     }
   }, {
     path: '/{id}',
     method: 'PUT',
-    handler: controllers.users.update,
+    handler: users.update,
     config: {
       description: 'update user',
       tags: ['api'],
       plugins: {
-        'hapi-swagger': {
-          responses: Object.assign({}, models.responses, {
-            '200': {
-              description: 'Success',
-              schema: models.user
-            }
-          })
-        },
-        'hapiAuthorization': {
-          role: 'ADMIN'
-        }
+        hapiAuthorization,
+        'hapi-swagger': { responses: responseSchema }
       },
       validate: {
         headers: models.headers,
-        params: {
-          id: Joi.number().required().description('user id')
-        },
+        params: paramsSchema,
         payload: Joi.object({
           name: Joi.string(),
           lastName: Joi.string()
@@ -100,28 +96,17 @@ exports.register = (server, options, next) => {
   }, {
     path: '/{id}',
     method: 'DELETE',
-    handler: controllers.users.delete,
+    handler: users.delete,
     config: {
       description: 'delete user',
       tags: ['api'],
       plugins: {
-        'hapi-swagger': {
-          responses: Object.assign({}, models.responses, {
-            '200': {
-              description: 'Success',
-              schema: models.user
-            }
-          })
-        },
-        'hapiAuthorization': {
-          role: 'ADMIN'
-        }
+        hapiAuthorization,
+        'hapi-swagger': { responses: responseSchema }
       },
       validate: {
         headers: models.headers,
-        params: {
-          id: Joi.number().required().description('user id')
-        }
+        params: paramsSchema
       }
     }
   }])

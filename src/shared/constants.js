@@ -1,3 +1,6 @@
+// BE CAREFUL, DO NOT change the order of this array,
+// it determines a scale of rights from the user with less rights (user)
+// and the user with more rights (admin)
 const roles = exports.roles = [
   'ADMIN',
   'VENUE',

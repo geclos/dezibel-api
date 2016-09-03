@@ -38,9 +38,9 @@ test('should return the input from a valid error object', t => {
 
 test('should return a valid error object from everything else', t => {
   const expected = {
-    message: '',
     statusCode: 500,
-    error: 'Internal server error'
+    error: 'Internal server error',
+    message: 'Internal server error'
   }
   const result = error.unknown(undefined)
   t.deepEqual(expected, result)
