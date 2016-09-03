@@ -15,6 +15,11 @@ exports.register = (server, options, next) => {
     timestamp: Joi.date().timestamp().required()
   }).required()
 
+  const defaultValidate = {
+    headers: models.headers,
+    params: { id: Joi.number().description('event id').required() }
+  }
+
   server.select('api').route([{
     path: '/',
     method: 'GET',
@@ -28,10 +33,7 @@ exports.register = (server, options, next) => {
           responses: models.ResponseSchema(Joi.array().items(models.event))
         }
       },
-      validate: {
-        headers: models.headers,
-        params: { id: Joi.number().description('event id').required() }
-      }
+      validate: defaultValidate
     }
   }, {
     path: '/{id}',
@@ -44,10 +46,7 @@ exports.register = (server, options, next) => {
         hapiAuthorization,
         'hapi-swagger': { responses: responseSchema }
       },
-      validate: {
-        headers: models.headers,
-        params: { id: Joi.number().description('event id').required() }
-      }
+      validate: defaultValidate
     }
   }, {
     path: '/',
