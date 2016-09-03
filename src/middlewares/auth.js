@@ -10,9 +10,9 @@ const validate = (req, decodedToken, callback) => {
       const role = results[1]
 
       if (!user || !role) {
-        callback(null, false)
+        return callback(null, false)
       } else {
-        callback(null, true, {user, role})
+        return callback(null, true, {user, role})
       }
     })
     .catch(() => callback(null, false))

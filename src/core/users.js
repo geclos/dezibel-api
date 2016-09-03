@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const bluebird = require('bluebird')
 const error = require('../utils/error')
+const catchUnknownErrors = require('./utils').catchUnknownErrors
 
 // converts callback-based bcrypt.hash function
 // into a promise-based function
@@ -9,49 +10,39 @@ const saltRounds = 10
 
 exports.get = req => new Promise((resolve, reject) => {
   const db = req.server.app.redis
-  const catchUnknownErrors = err => reject(error.unknown(err))
 
   if (req.params.id) { // get user with id
-    if (!hasPermissions(req.auth.credentials, req.params.id)) {
-      return reject(error.create(403, 'Forbidden'))
-    }
-
     db.hgetallAsync(`user:${req.params.id}`)
       .then(user => {
-        if (!user) return reject(error.create(204, 'No content'))
+        if (!user) return reject(error.RESOURCE_NOT_FOUND)
         resolve(user)
       })
-      .catch(catchUnknownErrors)
+      .catch(catchUnknownErrors.bind(null, reject))
   } else { // get all users (it is paginated)
-    if (req.auth.credentials.role !== 'ADMIN') {
-      return reject(error.create(403, 'Forbidden'))
-    }
-
     // get first 20 elements if no page and limit are specified
     const page = req.query.page || 0
     const limit = req.query.limit || 20
     db.lrangeAsync('users', page * (limit - 1), (page + 1) * (limit - 1))
       .then(ids => {
         if (!ids || !ids.length) {
-          return reject(error.create(204, 'No content'))
+          return reject(error.RESOURCE_NOT_FOUND)
         }
 
         const multi = db.multi()
         ids.forEach(id => multi.hgetallAsync(`user:${id}`))
         multi.execAsync()
           .then(users => {
-            if (!users) return reject(error.create(204, 'No content'))
+            if (!users) return reject(error.RESOURCE_NOT_FOUND)
             resolve(users)
           })
-          .catch(catchUnknownErrors)
+          .catch(catchUnknownErrors.bind(null, reject))
       })
-      .catch(catchUnknownErrors)
+      .catch(catchUnknownErrors.bind(null, reject))
   }
 })
 
 exports.create = req => new Promise((resolve, reject) => {
   const db = req.server.app.redis
-  const catchUnknownErrors = err => reject(error.unknown(err))
 
   db.lindexAsync('users', -1) // get last user's id
     .then(id => {
@@ -83,27 +74,22 @@ exports.create = req => new Promise((resolve, reject) => {
 
               multi.execAsync()
                 .then(() => resolve(user))
-                .catch(catchUnknownErrors)
+                .catch(catchUnknownErrors.bind(null, reject))
             })
-            .catch(catchUnknownErrors)
+            .catch(catchUnknownErrors.bind(null, reject))
         })
-        .catch(catchUnknownErrors)
+        .catch(catchUnknownErrors.bind(null, reject))
     })
-    .catch(catchUnknownErrors)
+    .catch(catchUnknownErrors.bind(null, reject))
 })
 
 exports.update = req => new Promise((resolve, reject) => {
-  if (!hasPermissions(req.auth.credentials, req.params.id)) {
-    return reject(error.create(403, 'Forbidden'))
-  }
-
   const db = req.server.app.redis
-  const catchUnknownErrors = err => reject(error.unknown(err))
 
   db.hgetallAsync(`user:${req.params.id}`)
     .then(user => {
       if (!user) {
-        return reject(error.create(204, 'User not found'))
+        return reject(error.RESOURCE_NOT_FOUND)
       }
 
       const newUser = Object.assign({}, user, {
@@ -114,23 +100,18 @@ exports.update = req => new Promise((resolve, reject) => {
 
       db.hmsetAsync(`user:${user.id}`, newUser)
         .then(user => resolve(newUser).code(201))
-        .catch(catchUnknownErrors)
+        .catch(catchUnknownErrors.bind(null, reject))
     })
-    .catch(catchUnknownErrors)
+    .catch(catchUnknownErrors.bind(null, reject))
 })
 
 exports.delete = req => new Promise((resolve, reject) => {
-  if (!hasPermissions(req.auth.credentials, req.params.id)) {
-    return reject(error.create(403, 'Forbidden'))
-  }
-
   const db = req.server.app.redis
-  const catchUnknownErrors = err => reject(error.unknown(err))
 
   db.hgetallAsync(`user:${req.params.id}`)
     .then(user => {
       if (!user) {
-        return reject(error.create(204, 'User not found'))
+        return reject(error.RESOURCE_NOT_FOUND)
       }
 
       const multi = db.multi()
@@ -139,17 +120,7 @@ exports.delete = req => new Promise((resolve, reject) => {
       db.lrem('users', 1, user.id)
       multi.execAsync()
         .then(res => resolve(user))
-        .catch(catchUnknownErrors)
+        .catch(catchUnknownErrors.bind(null, reject))
     })
-    .catch(catchUnknownErrors)
+    .catch(catchUnknownErrors.bind(null, reject))
 })
-
-const hasPermissions = (credentials, id) => {
-  return (
-    credentials &&
-    credentials.role &&
-    credentials.user &&
-    credentials.user.id &&
-    (credentials.role === 'ADMIN' || credentials.user.id === id.toString())
-  )
-}

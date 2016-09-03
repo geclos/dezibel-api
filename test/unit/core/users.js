@@ -59,7 +59,17 @@ test.serial('should login user', t => {
     .catch(err => t.fail(err.message))
 })
 
-test.serial('should fail to login user', t => {
+test.serial('should fail to login user cause unexisting email/user', t => {
+  const req = Object.assign({}, baseReq, {
+    payload: { email: 'foo@foo.com', password: mockUser.email }
+  })
+
+  return auth.login(req)
+    .then(u => t.fail())
+    .catch(err => t.is(err.statusCode, 401))
+})
+
+test.serial('should fail to login user cause wrong password', t => {
   const req = Object.assign({}, baseReq, {
     payload: { email: mockUser.email, password: 'foo' }
   })
@@ -86,12 +96,28 @@ test.serial('should login user with oauth', t => {
         .catch(err => t.fail(err.message))
 })
 
+test.serial('should fail to login user with oauth cause is not authenticated', t => {
+  const req = Object.assign({}, baseReq, {
+    auth: {
+      isAuthenticated: false,
+      credentials: {
+        profile: {
+          email: mockUser.email
+        }
+      }
+    }
+  })
+
+  return auth.loginWithOauth(req)
+    .then(u => t.fail())
+    .catch(err => t.is(err.statusCode, 401))
+})
+
 test.serial('should get user', t => {
   const req = Object.assign({}, baseReq, {
     auth: {
       credentials: {
-        user: {id: 1},
-        role: 'ADMIN'
+        user: {id: 1}
       }
     },
     params: {id: 1}
@@ -106,27 +132,10 @@ test.serial('should fail to get unexisting user', t => {
   const req = Object.assign({}, baseReq, {
     auth: {
       credentials: {
-        user: {id: 1},
-        role: 'ADMIN'
+        user: {id: 1}
       }
     },
     params: {id: 2}
-  })
-
-  return users.get(req)
-    .then(u => t.fail())
-    .catch(err => t.pass(err.statusCode), 403)
-})
-
-test.serial('should fail to get user cause he is no ADMIN', t => {
-  const req = Object.assign({}, baseReq, {
-    auth: {
-      credentials: {
-        user: {id: 1},
-        role: 'USER'
-      }
-    },
-    params: {id: 1}
   })
 
   return users.get(req)
@@ -138,8 +147,7 @@ test.serial('should get all users', t => {
   const req = Object.assign({}, baseReq, {
     auth: {
       credentials: {
-        user: {id: 1},
-        role: 'ADMIN'
+        user: {id: 1}
       }
     }
   })
@@ -152,27 +160,11 @@ test.serial('should get all users', t => {
     .catch(err => t.fail(err.message))
 })
 
-test.serial('should fail to get all users cause he is no ADMIN', t => {
-  const req = Object.assign({}, baseReq, {
-    auth: {
-      credentials: {
-        user: {id: 1},
-        role: 'USER'
-      }
-    }
-  })
-
-  return users.get(req)
-    .then(u => t.fail())
-    .catch(err => t.is(err.statusCode, 403))
-})
-
 test.serial('should update user', t => {
   const req = Object.assign({}, baseReq, {
     auth: {
       credentials: {
-        user: {id: 1},
-        role: 'ADMIN'
+        user: {id: 1}
       }
     },
     params: {id: 1},
@@ -188,8 +180,7 @@ test.serial('should fail to update unexisting user', t => {
   const req = Object.assign({}, baseReq, {
     auth: {
       credentials: {
-        user: {id: 1},
-        role: 'ADMIN'
+        user: {id: 1}
       }
     },
     params: {id: 2}
@@ -200,20 +191,19 @@ test.serial('should fail to update unexisting user', t => {
     .catch(err => t.is(err.statusCode, 204))
 })
 
-test.serial('should fail to update user cause he is no ADMIN', t => {
+test.serial('should fail to delete unexisting user', t => {
   const req = Object.assign({}, baseReq, {
+    params: {id: 2},
     auth: {
       credentials: {
-        user: {id: 1},
-        role: 'USER'
+        user: {id: 1}
       }
-    },
-    params: {id: 1}
+    }
   })
 
-  return users.update(req)
+  return users.delete(req)
     .then(u => t.fail())
-    .catch(err => t.is(err.statusCode, 403))
+    .catch(err => t.pass(err.statusCode, 204))
 })
 
 test.serial('should delete user', t => {
@@ -221,8 +211,7 @@ test.serial('should delete user', t => {
     params: {id: 1},
     auth: {
       credentials: {
-        user: {id: 1},
-        role: 'ADMIN'
+        user: {id: 1}
       }
     }
   })
@@ -230,38 +219,6 @@ test.serial('should delete user', t => {
   return users.delete(req)
     .then(u => t.truthy(compareUsers(t, u, Object.assign({}, mockUser, {name: 'changed!'}))))
     .catch(err => t.fail(err.message))
-})
-
-test.serial('should fail to delete unexisting user', t => {
-  const req = Object.assign({}, baseReq, {
-    params: {id: 2},
-    auth: {
-      credentials: {
-        user: {id: 1},
-        role: 'ADMIN'
-      }
-    }
-  })
-
-  return users.delete(req)
-    .then(u => t.fail())
-    .catch(err => t.pass(err.statusCode, 204))
-})
-
-test.serial('should fail to delete cause he is no ADMIN', t => {
-  const req = Object.assign({}, baseReq, {
-    params: {id: 1},
-    auth: {
-      credentials: {
-        user: {id: 1},
-        role: 'USER'
-      }
-    }
-  })
-
-  return users.delete(req)
-    .then(u => t.fail())
-    .catch(err => t.pass(err.statusCode, 204))
 })
 
 const compareUsers = (t, obj1, obj2) => {

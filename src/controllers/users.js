@@ -1,27 +1,27 @@
 const users = require('../core').users
+const error = require('../utils/error').error
+const isValidUser = require('./utils').isValidUser
+const handlePromise = require('./utils').handlePromise
 
 exports.get = (req, reply) => {
-  users.get(req)
-    .then(reply)
-    .catch(err => replyError(err, reply))
+  if (req.params.id) {
+    if (!isValidUser(req, reply)) return replyForbidden(req, reply)
+    handlePromise(req, reply, users.get)
+  } else {
+    handlePromise(req, reply)
+  }
 }
 
-exports.create = (req, reply) => {
-  users.create(req)
-    .then(reply)
-    .catch(err => replyError(err, reply))
-}
+exports.create = (req, reply) => handlePromise(req, reply, users.create)
 
 exports.update = (req, reply) => {
-  users.update(req)
-    .then(reply)
-    .catch(err => replyError(err, reply))
+  if (!isValidUser(req, reply)) return replyForbidden(req, reply)
+  handlePromise(req, reply, users.update)
 }
 
 exports.delete = (req, reply) => {
-  users.delete(req)
-    .then(reply)
-    .catch(err => replyError(err, reply))
+  if (!isValidUser(req, reply)) return replyForbidden(req, reply)
+  handlePromise(req, reply, users.delete)
 }
 
-const replyError = (err, reply) => reply(err).code(err.statusCode)
+const replyForbidden = (req, reply) => reply(error.FORBIDDEN).code(403)

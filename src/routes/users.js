@@ -82,7 +82,7 @@ exports.register = (server, options, next) => {
             }
           })
         },
-        'hapi-authorization': {
+        'hapiAuthorization': {
           role: 'ADMIN'
         }
       },
@@ -113,7 +113,7 @@ exports.register = (server, options, next) => {
             }
           })
         },
-        'hapi-authorization': {
+        'hapiAuthorization': {
           role: 'ADMIN'
         }
       },

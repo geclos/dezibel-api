@@ -7,31 +7,39 @@ const codes = {
 }
 
 module.exports = {
-  create (code, message) {
-    return {
-      statusCode: code,
-      message: message || '',
-      error: codes[code] || 'Unknown'
-    }
-  },
+  FORBIDDEN: create(403),
+  UNAUTHORIZED: create(401),
+  RESOURCE_NOT_FOUND: create(204),
+  INTERNAL_SERVER_ERROR: create(500),
 
-  isValidError (err) {
-    return (
-      err != null &&
-      (err.error != null && typeof err.error === 'string') &&
-      (err.message != null && typeof err.message === 'string') &&
-      err.statusCode != null && typeof err.statusCode === 'number'
-    )
-  },
+  create: create,
+  isValidError: isValidError,
+  unknown: handleUnknownError
+}
 
-  unknown (err) {
-    if (this.isValidError(err)) {
-      return err
-    } else if (err instanceof Error) {
-      return this.create(500, err.message)
-    } else {
-      return this.create(500)
-    }
+function create (code, message) {
+  return {
+    statusCode: code,
+    message: message || '',
+    error: codes[code] || 'Unknown'
   }
 }
 
+function isValidError (err) {
+  return (
+    err != null &&
+    (err.error != null && typeof err.error === 'string') &&
+    (err.message != null && typeof err.message === 'string') &&
+    err.statusCode != null && typeof err.statusCode === 'number'
+  )
+}
+
+function handleUnknownError (err) {
+  if (this.isValidError(err)) {
+    return err
+  } else if (err instanceof Error) {
+    return this.create(500, err.message)
+  } else {
+    return this.create(500)
+  }
+}
