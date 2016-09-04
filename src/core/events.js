@@ -36,8 +36,7 @@ exports.update = req => new Promise((resolve, reject) => {
 
   events.update({_id: _id, hostedBy: userId}, req.body)
     .then(res => {
-      console.log(res)
-      if (!res.result.nModified) return reject(error.RESOURCE_NOT_FOUND)
+      if (!res.result.n) return reject(error.RESOURCE_NOT_FOUND)
       resolve(req.body)
     })
     .catch(catchUnknownErrors.bind(null, reject))
