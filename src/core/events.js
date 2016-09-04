@@ -34,7 +34,7 @@ exports.update = req => new Promise((resolve, reject) => {
   const userId = req.auth.credentials.user.id
   const _id = req.params.id
 
-  events.update({ _id, hostedBy: userId}, req.body)
+  events.update({_id: _id, hostedBy: userId}, req.body)
     .then(res => {
       if (!res.result.nModified) return reject(error.RESOURCE_NOT_FOUND)
       resolve(req.body)
