@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "test:watch": "ava --watch",
-    "test": "nyc ava | tap-nyan",
+    "test": "nyc ava",
     "start": "nodemon src/index.js",
     "report": "nyc report --reporter=html --cache",
     "build": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 src/index"
@@ -54,7 +54,6 @@
     "parser": "babel-eslint"
   },
   "ava": {
-    "tap": true,
     "concurrency": 5
   },
   "engines": {
