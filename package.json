@@ -26,7 +26,7 @@
     "hapi-alive": "^1.4.0",
     "hapi-auth-jwt": "^4.0.0",
     "hapi-authorization": "^3.0.2",
-    "hapi-swagger": "^7.1.0",
+    "hapi-swagger": "^7.2.0",
     "hat": "0.0.3",
     "inert": "^4.0.1",
     "joi": "^9.0.0",
