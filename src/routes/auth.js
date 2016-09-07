@@ -4,14 +4,14 @@ exports.register = (server, options, next) => {
   const controllers = server.plugins['controllers'].controllers
   const models = server.plugins['models'].models
 
-  server.select('api').route([{
+  server.route([{
     method: 'POST',
     path: '/login',
     config: {
+      auth: false,
+      tags: ['api'],
       handler: controllers.auth.login,
       description: 'Login to dezibel API',
-      tags: ['api'],
-      auth: false,
       plugins: {
         'hapi-swagger': {
           responses: {

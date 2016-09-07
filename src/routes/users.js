@@ -8,13 +8,13 @@ exports.register = (server, options, next) => {
   const responseSchema = models.ResponseSchema(models.user)
   const paramsSchema = {id: Joi.number().required().description('user id')}
 
-  server.select('api').route([{
+  server.route([{
     path: '/',
     method: 'GET',
     handler: users.get,
     config: {
-      description: 'get users',
       tags: ['api'],
+      description: 'get users',
       plugins: {
         hapiAuthorization: {role: 'ADMIN'},
         'hapi-swagger': {
@@ -35,8 +35,8 @@ exports.register = (server, options, next) => {
     method: 'GET',
     handler: users.get,
     config: {
-      description: 'get user',
       tags: ['api'],
+      description: 'get user',
       plugins: {
         hapiAuthorization,
         'hapi-swagger': {
@@ -57,8 +57,8 @@ exports.register = (server, options, next) => {
     method: 'POST',
     handler: users.create,
     config: {
-      description: 'create new user',
       tags: ['api'],
+      description: 'create new user',
       auth: false,
       plugins: {
         'hapi-swagger': { responses: responseSchema }
@@ -78,8 +78,8 @@ exports.register = (server, options, next) => {
     method: 'PUT',
     handler: users.update,
     config: {
-      description: 'update user',
       tags: ['api'],
+      description: 'update user',
       plugins: {
         hapiAuthorization,
         'hapi-swagger': { responses: responseSchema }
@@ -98,8 +98,8 @@ exports.register = (server, options, next) => {
     method: 'DELETE',
     handler: users.delete,
     config: {
-      description: 'delete user',
       tags: ['api'],
+      description: 'delete user',
       plugins: {
         hapiAuthorization,
         'hapi-swagger': { responses: responseSchema }

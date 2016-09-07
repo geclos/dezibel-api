@@ -22,8 +22,15 @@ function start () {
   const server = new Hapi.Server()
 
   server.connection({
+    labels: ['api'],
     port: __DEV__ ? 3000 : (process.env.PORT || 3000),
-    labels: [ 'api' ]
+    routes: {
+      plugins: {
+        hapiAuthoriation: {
+          roles: ['ADMIN'] // default role for all endpoints
+        }
+      }
+    }
   })
 
   server.register([

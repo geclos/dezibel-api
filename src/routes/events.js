@@ -20,7 +20,7 @@ exports.register = (server, options, next) => {
     params: { id: Joi.number().description('event id').required() }
   }
 
-  server.select('api').route([{
+  server.route([{
     path: '/',
     method: 'GET',
     handler: events.get,
@@ -40,7 +40,7 @@ exports.register = (server, options, next) => {
     method: 'GET',
     handler: events.get,
     config: {
-      tags: ['api'], // so that it get automatically doucmented
+      tags: ['api'],
       description: 'get event',
       plugins: {
         hapiAuthorization,
@@ -53,7 +53,7 @@ exports.register = (server, options, next) => {
     method: 'POST',
     handler: events.create,
     config: {
-      tags: ['api'], // so that it get automatically doucmented
+      tags: ['api'],
       description: 'create event',
       plugins: {
         hapiAuthorization,
@@ -69,7 +69,7 @@ exports.register = (server, options, next) => {
     method: 'PUT',
     handler: events.update,
     config: {
-      tags: ['api'], // so that it get automatically doucmented
+      tags: ['api'],
       description: 'update event',
       plugins: {
         hapiAuthorization,
@@ -86,7 +86,7 @@ exports.register = (server, options, next) => {
     method: 'DELETE',
     handler: events.delete,
     config: {
-      tags: ['api'], // so that it get automatically doucmented
+      tags: ['api'],
       description: 'delete event',
       plugins: {
         hapiAuthorization,

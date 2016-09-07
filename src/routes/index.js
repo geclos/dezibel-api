@@ -1,5 +1,5 @@
 exports.register = (server, options, next) => {
-  server.register([
+  server.select('api').register([
     require('./auth'),
     {
       register: require('./users'),
