@@ -9,6 +9,11 @@ exports.register = (server, options, next) => {
     email: Joi.string().email().required()
   })
 
+  const coordinates = Joi.array()
+    .items(Joi.number().required())
+    .length(2)
+    .required()
+
   const event = Joi.object({
     description: Joi.string(),
     title: Joi.string().required(),
@@ -16,10 +21,7 @@ exports.register = (server, options, next) => {
     timestamp: Joi.date().timestamp().required(),
     bands: Joi.array().items(Joi.number()).required(),
     location: Joi.object({
-      coordinates: Joi.array()
-        .items(Joi.number().required())
-        .length(2)
-        .required()
+      coordinates: coordinates
     })
   })
 
@@ -34,10 +36,7 @@ exports.register = (server, options, next) => {
       description: Joi.string(),
       title: Joi.string().required(),
       location: Joi.object({
-        coordinates: Joi.array()
-          .items(Joi.number().required())
-          .length(2)
-          .required()
+        coordinates: coordinates
       })
     })
   })

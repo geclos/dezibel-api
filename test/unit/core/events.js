@@ -29,6 +29,7 @@ test.before(t => {
   return mongo.MongoClient.connect('mongodb://localhost:27017/local')
     .then(database => {
       db = database
+      db.createCollection('events')
       req.server.app.mongo = db
     })
     .catch(err => { t.fail(err.message) })

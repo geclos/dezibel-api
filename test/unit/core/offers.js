@@ -37,6 +37,9 @@ test.before(t => {
   return mongo.MongoClient.connect('mongodb://localhost:27017/local')
     .then(database => {
       db = database
+      db.createCollection('offers')
+      db.createCollection('offers:inactive')
+      db.collection('offers').createIndex({location: '2dsphere'})
       req.server.app.mongo = db
     })
     .catch(err => { t.fail(err.message) })
