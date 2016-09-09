@@ -1,7 +1,9 @@
+const good = require('good')
+
 module.exports.register = (server, options, next) => {
   server.register([
     {
-      register: require('good'),
+      register: good,
       options: {
         reporters: {
           console: [{

@@ -60,7 +60,7 @@ exports.create = req => new Promise((resolve, reject) => {
                 hash: h,
                 email: req.payload.email,
                 name: req.payload.name || '',
-                id: (parseInt(id) + 1).toString(),
+                id: (parseInt(id, 10) + 1).toString(),
                 lastName: req.payload.lastName || ''
               }
 

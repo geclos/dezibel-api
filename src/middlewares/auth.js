@@ -1,4 +1,7 @@
+const bell = require('bell')
+const hapiJWT = require('hapi-auth-jwt')
 const roles = require('../shared/constants').roles
+const hapiAuthorization = require('hapi-authorization')
 
 const validate = (req, decodedToken, callback) => {
   Promise.all([
@@ -22,10 +25,10 @@ exports.register = (server, options, next) => {
   server.app.secret = process.env.SECRET // private secret to authenticate JSON web tokens
 
   server.register([
-    require('bell'),
-    require('hapi-auth-jwt'),
+    bell,
+    hapiJWT,
     {
-      register: require('hapi-authorization'),
+      register: hapiAuthorization,
       options: {
         roles,
         hierarchy: true

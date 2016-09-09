@@ -1,3 +1,7 @@
+const tv = require('tv') // create a page to display server logs
+const inert = require('inert')
+const blipp = require('blipp') // prints all routes on console during app startup
+const vision = require('vision')
 const pack = require('../../package.json')
 const HapiSwagger = require('hapi-swagger')
 
@@ -10,14 +14,14 @@ const swaggerOptions = {
 
 module.exports.register = (server, options, next) => {
   server.register([
-    require('inert'),
-    require('vision'),
+    inert,
+    vision,
     {
       'register': HapiSwagger,
       'options': swaggerOptions
     },
-    require('blipp'), // prints all routes on console during app startup
-    require('tv') // create a page to display server logs
+    tv,
+    blipp
   ], (err) => {
     if (err) throw err
     next()

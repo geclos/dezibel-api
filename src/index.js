@@ -1,3 +1,4 @@
+const os = require('os')
 const Hapi = require('hapi')
 const throng = require('throng')
 const routes = require('./routes')
@@ -6,7 +7,7 @@ const controllers = require('./controllers')
 const middlewares = require('./middlewares')
 
 try {
-  var WORKERS = process.env.WEB_CONCURRENCY || require('os').cpus().length
+  var WORKERS = process.env.WEB_CONCURRENCY || os.cpus().length
 } catch (e) {
   // do nothing
 }
