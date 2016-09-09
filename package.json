@@ -5,8 +5,8 @@
   "description": "api for dezibel",
   "main": "src/index.js",
   "scripts": {
+    "test": "nyc ava",
     "test:watch": "ava --watch",
-    "test": "nyc ava | tap-nyan",
     "start": "nodemon src/index.js",
     "report": "nyc report --reporter=html --cache",
     "build": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 src/index"
@@ -54,8 +54,7 @@
     "parser": "babel-eslint"
   },
   "ava": {
-    "concurrency": 5,
-    "tap": true
+    "concurrency": 5
   },
   "engines": {
     "node": "6.3.0"
