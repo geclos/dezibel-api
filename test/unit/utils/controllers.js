@@ -1,6 +1,6 @@
 const test = require('ava')
-const isValidUser = require('../../../src/controllers/utils').isValidUser
-const handlePromise = require('../../../src/controllers/utils').handlePromise
+const isValidUser = require('../../../src/controllers/shared').isValidUser
+const handlePromise = require('../../../src/controllers/shared').handlePromise
 
 test('should return true when param id and user id are equal', t => {
   const req = {

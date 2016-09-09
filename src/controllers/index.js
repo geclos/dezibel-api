@@ -1,6 +1,7 @@
 const controllers = {
   auth: require('./auth'),
   users: require('./users'),
+  offers: require('./offers'),
   events: require('./events')
 }
 

@@ -3,17 +3,11 @@ const Joi = require('joi')
 exports.register = (server, options, next) => {
   const events = server.plugins.controllers.controllers.events
   const models = server.plugins.models.models
+  const Response = models.Response
 
-  const hapiAuthorization = { role: 'VENUE' }
-  const responseSchema = models.ResponseSchema(models.event)
-  const paramsSchema = { id: Joi.number().description('event id') }
-  const payloadSchema = Joi.object({
-    title: Joi.string().required(),
-    hostedBy: Joi.number().required(),
-    description: Joi.string().required(),
-    bands: Joi.array().items(Joi.number()),
-    timestamp: Joi.date().timestamp().required()
-  }).required()
+  const defaultAuthorization = { role: 'VENUE' }
+  const defaultResponse = Response(models.event)
+  const defaultParams = { id: Joi.number().description('event id') }
 
   const defaultValidate = {
     headers: models.headers,
@@ -29,9 +23,7 @@ exports.register = (server, options, next) => {
       description: 'get events',
       plugins: {
         hapiAuthorization: {role: 'ADMIN'},
-        'hapi-swagger': {
-          responses: models.ResponseSchema(Joi.array().items(models.event))
-        }
+        'hapi-swagger': Response(Joi.array().items(models.event))
       },
       validate: defaultValidate
     }
@@ -43,8 +35,8 @@ exports.register = (server, options, next) => {
       tags: ['api'],
       description: 'get event',
       plugins: {
-        hapiAuthorization,
-        'hapi-swagger': { responses: responseSchema }
+        hapiAuthorization: defaultAuthorization,
+        'hapi-swagger': defaultResponse
       },
       validate: defaultValidate
     }
@@ -56,12 +48,12 @@ exports.register = (server, options, next) => {
       tags: ['api'],
       description: 'create event',
       plugins: {
-        hapiAuthorization,
-        'hapi-swagger': { responses: responseSchema }
+        hapiAuthorization: defaultAuthorization,
+        'hapi-swagger': defaultResponse
       },
       validate: {
         headers: models.headers,
-        payload: payloadSchema
+        payload: models.event
       }
     }
   }, {
@@ -72,13 +64,13 @@ exports.register = (server, options, next) => {
       tags: ['api'],
       description: 'update event',
       plugins: {
-        hapiAuthorization,
-        'hapi-swagger': { responses: responseSchema }
+        hapiAuthorization: defaultAuthorization,
+        'hapi-swagger': defaultResponse
       },
       validate: {
         headers: models.headers,
-        payload: payloadSchema,
-        params: paramsSchema
+        payload: models.event,
+        params: defaultParams
       }
     }
   }, {
@@ -89,12 +81,32 @@ exports.register = (server, options, next) => {
       tags: ['api'],
       description: 'delete event',
       plugins: {
-        hapiAuthorization,
-        'hapi-swagger': { responses: responseSchema }
+        hapiAuthorization: defaultAuthorization,
+        'hapi-swagger': defaultResponse
       },
       validate: {
         headers: models.headers,
-        params: paramsSchema
+        params: defaultParams
+      }
+    }
+  }, {
+    path: '/findNear',
+    method: 'POST',
+    handler: events.findNear,
+    config: {
+      tags: ['api'],
+      description: 'find events near a given location',
+      plugins: {
+        hapiAuthorization: defaultAuthorization,
+        'hapi-swagger': Response(Joi.array().items(models.event))
+      },
+      validate: {
+        headers: models.headers,
+        payload: Joi.object({
+          location: Joi.object({
+            coordinates: Joi.array().items(Joi.number()).length(2).required()
+          }).required()
+        }).required()
       }
     }
   }])

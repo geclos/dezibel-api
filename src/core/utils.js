@@ -1,2 +1,2 @@
-const error = require('../utils/error')
+const error = require('../shared/error')
 exports.catchUnknownErrors = (reject, err) => reject(error.unknown(err))

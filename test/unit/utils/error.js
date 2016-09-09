@@ -1,5 +1,5 @@
 const test = require('ava')
-const error = require('../../../src/utils/error')
+const error = require('../../../src/shared/error')
 
 const errorObject = {
   message: 'foo',

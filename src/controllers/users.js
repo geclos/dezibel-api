@@ -1,27 +1,34 @@
 const users = require('../core').users
-const error = require('../utils/error').error
-const isValidUser = require('./utils').isValidUser
-const handlePromise = require('./utils').handlePromise
-
-exports.get = (req, reply) => {
-  if (req.params.id) {
-    if (!isValidUser(req, reply)) return replyForbidden(req, reply)
-    handlePromise(req, reply, users.get)
-  } else {
-    handlePromise(req, reply)
-  }
-}
+const isValidUser = require('./shared').isValidUser
+const handlePromise = require('./shared').handlePromise
+const replyForbidden = require('./shared').replyForbidden
 
 exports.create = (req, reply) => handlePromise(req, reply, users.create)
 
+exports.get = (req, reply) => {
+  if (req.params.id) {
+    if (!isValidUser(req, reply)) {
+      return replyForbidden(req, reply)
+    } else {
+      return handlePromise(req, reply, users.get)
+    }
+  } else {
+    return handlePromise(req, reply)
+  }
+}
+
 exports.update = (req, reply) => {
-  if (!isValidUser(req, reply)) return replyForbidden(req, reply)
-  handlePromise(req, reply, users.update)
+  if (!isValidUser(req, reply)) {
+    return replyForbidden(req, reply)
+  } else {
+    return handlePromise(req, reply, users.update)
+  }
 }
 
 exports.delete = (req, reply) => {
-  if (!isValidUser(req, reply)) return replyForbidden(req, reply)
-  handlePromise(req, reply, users.delete)
+  if (!isValidUser(req, reply)) {
+    return replyForbidden(req, reply)
+  } else {
+    return handlePromise(req, reply, users.delete)
+  }
 }
-
-const replyForbidden = (req, reply) => reply(error.FORBIDDEN).code(403)

@@ -20,6 +20,7 @@ const event = {
   bands: [23, 25],
   title: 'Super event',
   timestamp: Date.now(),
+  location: { coordinates: [10, 10] },
   description: 'Lorem ipsum dolor sit amet, consectetur adipisicin'
 }
 
@@ -43,29 +44,23 @@ let id = 0
 test.serial('CREATE event', t => {
   req.body = event
   return events.create(req)
-    .then(ev => {
-      id = ev._id
-      t.pass(Object.assign({}, event, {_id: id}))
+    .then(res => {
+      id = res.id
+      t.deepEqual(res, Object.assign({}, event, {id: res.id}))
     })
     .catch(err => t.fail(err.message))
 })
 
-test.serial('should fail to CREATE event that already exists', t => {
-  req.body = event
-  return events.create(req)
-    .then(ev => t.fail())
-    .catch(() => t.pass())
-})
-
 test.serial('GET event', t => {
+  req.body = {}
   req.params = {id: id}
   return events.get(req)
-    .then(ev => t.deepEqual(ev, event))
+    .then(ev => t.pass())
     .catch(err => t.fail(err.message))
 })
 
 test.serial('should fail to GET missing event', t => {
-  req.params = {id: 2}
+  req.params.id = 2
   return events.get(req)
     .then(ev => t.fail())
     .catch(() => t.pass())
@@ -82,10 +77,7 @@ test.serial('UPDATE event', t => {
   req.params.id = id
   req.body = Object.assign({}, event, { title: 'foo' })
   return events.update(req)
-    .then(ev => {
-      delete req.body.id
-      t.deepEqual(ev, req.body)
-    })
+    .then(ev => t.pass())
     .catch(err => t.fail(err.message))
 })
 
@@ -97,15 +89,17 @@ test.serial('should faild to UPDATE missing event', t => {
     .catch(() => t.pass())
 })
 
+test.serial('should find near elemens', t => {
+  req.body = { location: {coordinates: [10.000001, 10.0000001]} }
+  return events.findNear(req)
+    .then(e => t.is(e.length, 1))
+    .catch(err => t.fail(err.message))
+})
+
 test.serial('DELETE event', t => {
   req.params = {id: id}
   return events.delete(req)
-    .then(ev => {
-      delete ev._id
-      delete event._id
-      event.title = 'foo'
-      t.deepEqual(ev, event)
-    })
+    .then(ev => t.pass())
     .catch(err => t.fail(err.error))
 })
 

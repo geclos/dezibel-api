@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const bluebird = require('bluebird')
-const error = require('../utils/error')
+const error = require('../shared/error')
 const catchUnknownErrors = require('./utils').catchUnknownErrors
 
 // converts callback-based bcrypt.hash function

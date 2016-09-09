@@ -1,4 +1,4 @@
-const error = require('../utils/error')
+const error = require('../shared/error')
 const catchUnknownErrors = require('./utils').catchUnknownErrors
 
 exports.get = req => new Promise((resolve, reject) => {
@@ -24,8 +24,9 @@ exports.get = req => new Promise((resolve, reject) => {
 
 exports.create = req => new Promise((resolve, reject) => {
   const events = req.server.app.mongo.collection('events')
-  events.insert(req.body)
-    .then(res => resolve(res.ops[0]))
+  req.body.location.type = 'Point'
+  events.insertOne(req.body)
+    .then(res => resolve(Object.assign({}, req.body, {id: res.insertedId})))
     .catch(catchUnknownErrors.bind(null, reject))
 })
 
@@ -34,7 +35,7 @@ exports.update = req => new Promise((resolve, reject) => {
   const userId = req.auth.credentials.user.id
   const _id = req.params.id
 
-  events.update({_id: _id, hostedBy: userId}, req.body)
+  events.updateOne({_id: _id, hostedBy: userId}, req.body)
     .then(res => {
       if (!res.result.n) return reject(error.RESOURCE_NOT_FOUND)
       resolve(req.body)
@@ -49,10 +50,28 @@ exports.delete = req => new Promise((resolve, reject) => {
   events.findOne({_id: req.params.id, hostedBy: userId}, (err, doc) => {
     if (err) return catchUnknownErrors(reject, err)
     if (!doc) return reject(error.RESOURCE_NOT_FOUND)
-    events.remove({_id: req.params.id, hostedBy: userId}, (err, res) => {
+    events.deleteOne({_id: req.params.id, hostedBy: userId}, (err, res) => {
       if (err) return catchUnknownErrors(reject, err)
       if (!res.result.n) return reject(error.RESOURCE_NOT_FOUND)
       resolve(doc)
     })
+  })
+})
+
+exports.findNear = req => new Promise((resolve, reject) => {
+  const events = req.server.app.mongo.collection('events')
+  events.find({
+    location: {
+      $nearSphere: {
+        $geometry: {
+          type: 'Point',
+          coordinates: req.body.location.coordinates
+        },
+        $maxDistance: 500
+      }
+    }
+  }).toArray((err, docs) => {
+    if (err) return catchUnknownErrors(reject, err)
+    resolve(docs)
   })
 })
