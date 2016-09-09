@@ -33,22 +33,29 @@ const req = {
 let db // mongo database reference
 let id = 0 // offer id
 
-test.before(t => {
-  return mongo.MongoClient.connect('mongodb://localhost:27017/local')
+test.cb.before(t => {
+  mongo.MongoClient.connect('mongodb://localhost:27017/local')
     .then(database => {
       db = database
-      db.createCollection('offers')
-      db.createCollection('offers:inactive')
-      db.collection('offers').createIndex({location: '2dsphere'})
+      db.createCollection('offers', err => {
+        if (err) t.fail(err.message)
+        db.createCollection('offers:inactive', err => {
+          if (err) t.fail(err.message)
+          t.end()
+        })
+      })
       req.server.app.mongo = db
     })
     .catch(err => { t.fail(err.message) })
 })
 
-test.after(t => {
-  db.collection('offers').deleteMany({})
-  db.collection('offers:inactive').deleteMany({})
-  db.close()
+test.cb.after(t => {
+  db.collection('offers:inactive').drop(() => {
+    db.collection('offers').drop(() => {
+      db.close()
+      t.end()
+    })
+  })
 })
 
 test.serial('should create an offer', t => {

@@ -25,19 +25,27 @@ const event = {
 }
 
 let db
-test.before(t => {
-  return mongo.MongoClient.connect('mongodb://localhost:27017/local')
+test.cb.before(t => {
+  mongo.MongoClient.connect('mongodb://localhost:27017/local')
     .then(database => {
       db = database
-      db.createCollection('events')
       req.server.app.mongo = db
+      db.createCollection('events', err => {
+        if (err) t.fail(err.message)
+        db.collection('events').createIndex({location: '2dsphere'}, err => {
+          if (err) t.fail(err.message)
+          t.end()
+        })
+      })
     })
     .catch(err => { t.fail(err.message) })
 })
 
-test.after(t => {
-  db.collection('events').deleteMany({})
-  db.close()
+test.cb.after(t => {
+  db.collection('events').drop(() => {
+    db.close()
+    t.end()
+  })
 })
 
 let id = 0
