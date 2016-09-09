@@ -75,6 +75,13 @@ test.serial('should get all offers', t => {
     .catch(err => t.fail(err.message))
 })
 
+test.serial('should get offer by id', t => {
+  req.params.id = id
+  return offers.get(req)
+    .then(res => t.pass())
+    .catch(err => t.fail(err.message))
+})
+
 test.serial('should accept an offer', t => {
   req.body = {}
   req.params.id = id

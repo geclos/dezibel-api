@@ -13,7 +13,7 @@ exports.get = req => new Promise((resolve, reject) => {
   const offers = req.server.app.mongo.collection('offers')
   const userId = req.auth.credentials.user.id
 
-  if (req.params.id) { // TODO: add test for this use case
+  if (req.params && req.params.id) {
     offers.findOne({_id: req.params.id}, (err, doc) => {
       if (err) return catchUnknownErrors(err)
       resolve(doc)
