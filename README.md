@@ -6,7 +6,7 @@
 #Dezible API
 Back-end service for a small *airbnb-like* app I'm developing.
 
-##TL DR
+##TL;DR
 
 You can do whatever you want with the code. For example: it can easily be stripped down to an auth API layer with Oauth support for any kind of service.
 
