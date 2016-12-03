@@ -44,7 +44,7 @@
     "fakeredis": "^1.0.3",
     "foreman": "^2.0.0",
     "nodemon": "^1.9.2",
-    "nyc": "^8.1.0",
+    "nyc": "^10.0.0",
     "redis-mock": "^0.15.0",
     "sinon": "^1.17.5",
     "supertest": "^2.0.0",
