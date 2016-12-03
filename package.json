@@ -39,7 +39,7 @@
     "vision": "^4.1.0"
   },
   "devDependencies": {
-    "ava": "^0.16.0",
+    "ava": "^0.17.0",
     "coveralls": "^2.11.12",
     "fakeredis": "^1.0.3",
     "foreman": "^2.0.0",
