@@ -35,7 +35,7 @@
     "node-env-file": "^0.1.8",
     "redis": "^2.6.2",
     "throng": "^4.0.0",
-    "tv": "^5.0.2",
+    "tv": "^6.1.0",
     "vision": "^4.1.0"
   },
   "devDependencies": {
