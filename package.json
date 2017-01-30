@@ -47,7 +47,7 @@
     "nyc": "^10.0.0",
     "redis-mock": "^0.16.0",
     "sinon": "^1.17.5",
-    "supertest": "^2.0.0",
+    "supertest": "^3.0.0",
     "tap-nyan": "1.1.0"
   },
   "standard": {
