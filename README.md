@@ -3,14 +3,14 @@
 [![Code Climate](https://codeclimate.com/repos/57c5af4f15391043d3000197/badges/3301087a120971e3e2e5/gpa.svg)](https://codeclimate.com/repos/57c5af4f15391043d3000197/feed)
 [![Coverage Status](https://coveralls.io/repos/github/geclos/dezibel-api/badge.svg?branch=master)](https://coveralls.io/github/geclos/dezibel-api?branch=master)
 
-#Dezible API
-Back-end service for a small *airbnb-like* app I'm developing.
+# Dezible API
+Back-end service for a small *airbnb-like* app.
 
-##TL;DR
+## TL;DR
 
 You can do whatever you want with the code. For example: it can easily be stripped down to an auth API layer with Oauth support for any kind of service.
 
-##Motivation
+## Motivation
 
 It is an app aimed at music bands, live-music venues and fans. Venues can create events and hire bands through the app whereas fans can search for nearby events, comment on past events and check in to upcoming events.
 
