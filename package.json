@@ -41,7 +41,7 @@
   "devDependencies": {
     "ava": "^0.18.1",
     "coveralls": "^2.11.12",
-    "fakeredis": "^1.0.3",
+    "fakeredis": "^2.0.0",
     "foreman": "^2.0.0",
     "nodemon": "^1.9.2",
     "nyc": "^10.0.0",
