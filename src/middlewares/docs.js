@@ -29,5 +29,5 @@ module.exports.register = (server, options, next) => {
 }
 
 module.exports.register.attributes = {
-  name: 'middlewares:swagger'
+  name: 'middlewares:docs'
 }

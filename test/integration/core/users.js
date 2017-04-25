@@ -93,7 +93,7 @@ test.serial('should login user with oauth', t => {
 
   return auth.loginWithOauth(req)
     .then(u => t.truthy(compareUsers(t, u, mockUser)))
-        .catch(err => t.fail(err.message))
+    .catch(err => t.fail(err.message))
 })
 
 test.serial('should fail to login user with oauth cause is not authenticated', t => {

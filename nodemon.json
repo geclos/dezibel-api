@@ -1,15 +1,12 @@
 {
   "env": {
-    "PORT": 3000,
     "__DEV__": true,
-    "SECRET": "marvin",
-    "MONGO_PORT":27017,
-    "REDIS_PORT": 6379,
-    "MONGO_DATABASE":"test",
-    "MONGO_HOST":"localhost",
-    "REDIS_HOST": "localhost",
     "NODE_ENV": "development",
     "OAUTH_FACEBOOK_ID": "placeholder",
-    "OAUTH_FACEBOOK_SECRET": "placeholder"
+    "OAUTH_FACEBOOK_SECRET": "placeholder",
+    "PORT": 3000,
+    "REDIS_HOST": "localhost",
+    "REDIS_PORT": 6379,
+    "SECRET": "marvin"
  }
 }

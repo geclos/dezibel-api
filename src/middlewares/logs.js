@@ -26,5 +26,5 @@ module.exports.register = (server, options, next) => {
 }
 
 module.exports.register.attributes = {
-  name: 'middlewares:logger'
+  name: 'logs'
 }

@@ -3,6 +3,7 @@ const Hapi = require('hapi')
 const throng = require('throng')
 const routes = require('./routes')
 const models = require('./models')
+const services = require('./services')
 const controllers = require('./controllers')
 const middlewares = require('./middlewares')
 
@@ -37,6 +38,7 @@ function start () {
   server.register([
     middlewares,
     controllers,
+    services,
     models,
     routes
   ], err => {

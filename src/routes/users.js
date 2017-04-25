@@ -19,44 +19,20 @@ exports.register = (server, options, next) => {
   const defaultParams = {id: Joi.number().required().description('user id')}
 
   server.route([{
-    path: '/',
-    method: 'GET',
-    handler: users.get,
-    config: {
-      tags: ['api'],
-      description: 'get users',
-      plugins: {
-        hapiAuthorization: {role: 'ADMIN'},
-        'hapi-swagger': Response(Joi.array().items(payload))
-      },
-      validate: {
-        params: defaultParams,
-        headers: models.headers,
-        query: {
-          limit: Joi.number(),
-          page: Joi.number()
-        }
-      }
-    }
-  }, {
     path: '/{id}',
     method: 'GET',
     handler: users.get,
     config: {
       tags: ['api'],
-      description: 'get user',
+      description: 'get user/s',
       plugins: { 'hapi-swagger': defaultResponse },
       validate: {
         params: defaultParams,
-        headers: models.headers,
-        query: {
-          limit: Joi.number(),
-          page: Joi.number()
-        }
+        headers: models.headers
       }
     }
   }, {
-    path: '/{userType?}',
+    path: '/',
     method: 'POST',
     handler: users.create,
     config: {
@@ -70,12 +46,7 @@ exports.register = (server, options, next) => {
           lastName: Joi.string(),
           email: Joi.string().email().required(),
           password: Joi.string().alphanum().min(6).max(30).required()
-        }).required(),
-        params: {
-          userType: Joi.string()
-            .valid(roles)
-            .description('user type: \'user\', \'band\', \'venue\'. Defaults to \'user\'.')
-        }
+        }).required()
       }
     }
   }, {

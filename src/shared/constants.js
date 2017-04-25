@@ -3,8 +3,6 @@
 // and the user with more rights (admin)
 const roles = exports.roles = [
   'ADMIN',
-  'VENUE',
-  'BAND',
   'USER'
 ]
 

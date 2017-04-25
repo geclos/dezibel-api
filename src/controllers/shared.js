@@ -9,6 +9,6 @@ exports.handlePromise = (req, reply, promise) => {
 exports.replyForbidden = (req, reply) =>
   reply(error.FORBIDDEN).code(error.FORBIDDEN.statusCode)
 
-exports.isValidUser = req =>
-  req.params.id === req.auth.credentials.user.id
-
+exports.isValidUser = req => {
+  return req.params.id.toString() === req.auth.credentials.user.id
+}
