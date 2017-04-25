@@ -143,23 +143,6 @@ test.serial('should fail to get unexisting user', t => {
     .catch(err => t.pass(err.statusCode), 403)
 })
 
-test.serial('should get all users', t => {
-  const req = Object.assign({}, baseReq, {
-    auth: {
-      credentials: {
-        user: {id: 1}
-      }
-    }
-  })
-
-  return users.get(req)
-    .then(u => {
-      t.truthy(compareUsers(t, u[0], mockUser))
-      t.truthy(u instanceof Array)
-    })
-    .catch(err => t.fail(err.message))
-})
-
 test.serial('should update user', t => {
   const req = Object.assign({}, baseReq, {
     auth: {

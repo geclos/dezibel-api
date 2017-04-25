@@ -8,7 +8,7 @@ test('should return true when param id and user id are equal', t => {
     auth: {
       credentials: {
         user: {
-          id: 1
+          id: '1'
         }
       }
     }
@@ -23,7 +23,7 @@ test('should return false when param id and user id are different', t => {
     auth: {
       credentials: {
         user: {
-          id: 1
+          id: '1'
         }
       }
     }
