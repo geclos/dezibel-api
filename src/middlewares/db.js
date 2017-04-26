@@ -18,6 +18,7 @@ exports.register = (server, options, next) => {
 
   client.on('error', err => server.error('Error ' + err))
   server.app.redis = client
+  
   next()
 }
 

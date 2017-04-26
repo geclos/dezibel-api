@@ -9,7 +9,9 @@ const hash = bluebird.promisify(bcrypt.hash)
 const saltRounds = 10
 
 exports.get = req => new Promise((resolve, reject) => {
-  req.server.app.users.get(req.params.id)
+  const users = req.server.app.users
+  
+  users.get(req.params.id)
     .then(user => {
       if (!user) return reject(error.RESOURCE_NOT_FOUND)
       resolve(createUserObject(user))

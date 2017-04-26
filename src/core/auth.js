@@ -8,12 +8,15 @@ const { createUserObject, catchUnknownErrors } = require('./utils')
 const compare = bluebird.promisify(bcrypt.compare)
 
 exports.login = req => new Promise((resolve, reject) => {
-  req.server.app.users.getFromEmail(req.payload.email)
+  const users = req.server.app.users
+  const secret = req.server.app.secret
+
+  users.getFromEmail(req.payload.email)
     .then(user => {
       compare(req.payload.password, user.hash)
         .then(areEqual => {
           if (!areEqual) return reject(error.create(401, 'Incorrect password'))
-          resolve(createUserObject(user, req.server.app.secret))
+          resolve(createUserObject(user, secret))
         })
         .catch(catchUnknownErrors.bind(null, reject))
     })
@@ -28,8 +31,10 @@ exports.loginWithOauth = req => new Promise((resolve, reject) => {
   }
 
   const email = req.auth.credentials.profile.email
+  const users = req.server.app.users
+  const secret = req.server.app.secret
 
-  req.server.app.users.getFromEmail(email)
-    .then(user => resolve(createUserObject(user, req.server.app.secret)))
+  users.getFromEmail(email)
+    .then(user => resolve(createUserObject(user, secret)))
     .catch(catchUnknownErrors.bind(null, reject))
 })
