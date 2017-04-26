@@ -1,22 +1,11 @@
 const bell = require('bell')
 const hapiJWT = require('hapi-auth-jwt')
-const roles = require('../shared/constants').roles
-const hapiAuthorization = require('hapi-authorization')
 
 const validate = (req, decodedToken, callback) => {
-  Promise.all([
-    req.server.app.redis.hgetallAsync(`user:${decodedToken.accountId}`),
-    req.server.app.redis.getAsync(`user:${decodedToken.accountId}:role`)
-  ])
-    .then(results => {
-      const user = results[0]
-      const role = results[1]
-
-      if (!user || !role) {
-        return callback(null, false)
-      } else {
-        return callback(null, true, {user, role})
-      }
+  req.server.app.redis.hgetallAsync(`user:${decodedToken.accountId}`)
+    .then(user => {
+      if (!user) return callback(null, false)
+      return callback(null, true, {user})
     })
     .catch(() => callback(null, false))
 }
@@ -26,14 +15,7 @@ exports.register = (server, options, next) => {
 
   server.register([
     bell,
-    hapiJWT,
-    {
-      register: hapiAuthorization,
-      options: {
-        roles,
-        hierarchy: true
-      }
-    }
+    hapiJWT
   ], err => {
     if (err) throw err
 

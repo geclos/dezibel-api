@@ -10,7 +10,7 @@ const saltRounds = 10
 
 exports.get = req => new Promise((resolve, reject) => {
   const users = req.server.app.users
-  
+
   users.get(req.params.id)
     .then(user => {
       if (!user) return reject(error.RESOURCE_NOT_FOUND)
@@ -48,7 +48,6 @@ exports.create = req => new Promise((resolve, reject) => {
               multi.rpush('users', user.id)
               multi.hmset(`user:${user.id}`, user)
               multi.set(`user:${user.email}`, user.id)
-              multi.set(`user:${user.id}:role`, req.params.userType || 'USER')
 
               multi.execAsync()
                 .then(() => resolve(createUserObject(user)))

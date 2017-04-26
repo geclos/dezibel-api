@@ -5,7 +5,7 @@
   "description": "api for dezibel",
   "main": "src/index.js",
   "scripts": {
-    "test": "lab",
+    "test": "lab test/**/*.spec.js",
     "start": "nodemon --debug src/index.js",
     "report": "nyc report --reporter=html --cache",
     "build": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 src/index"

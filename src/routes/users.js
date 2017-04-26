@@ -1,5 +1,4 @@
 const Joi = require('joi')
-const roles = require('../shared/constants').roles.slice(1)
 
 exports.register = (server, options, next) => {
   const models = server.plugins['models'].models
@@ -38,7 +37,6 @@ exports.register = (server, options, next) => {
     config: {
       tags: ['api'],
       description: 'create new user',
-      auth: false,
       plugins: { 'hapi-swagger': defaultResponse },
       validate: {
         payload: Joi.object({

@@ -1,8 +1,6 @@
 require('dotenv').config()
 
-const os = require('os')
 const Hapi = require('hapi')
-const throng = require('throng')
 const routes = require('./routes')
 const models = require('./models')
 const services = require('./services')
@@ -14,14 +12,7 @@ const server = new Hapi.Server()
 
 server.connection({
   labels: ['api'],
-  port: __DEV__ ? 3000 : (process.env.PORT || 3000),
-  routes: {
-    plugins: {
-      hapiAuthoriation: {
-        roles: ['ADMIN'] // default role for all endpoints
-      }
-    }
-  }
+  port: __DEV__ ? 3000 : (process.env.PORT || 3000)
 })
 
 server.register([

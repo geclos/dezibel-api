@@ -1,52 +1,43 @@
 const Code = require('code')
-const Lab = require("lab")
+const Lab = require('lab')
 const lab = exports.lab = Lab.script()
-const server = require("../../src/index")
+const seed = require('../index')
+const server = require('../../src/index')
 
 // BDD
-const describe = lab.describe;
-const it = lab.it;
-const before = lab.before;
-const after = lab.after;
-const expect = Code.expect;
+const describe = lab.describe
+const it = lab.it
+const before = lab.before
+const expect = Code.expect
 
-describe('/auth', () => {
+describe('/users', () => {
   before(done => {
-    server.inject({
-      method: 'POST',
-      url: '/users',
-      payload: {
-        "name": "Foo",
-        "lastName": "bar",
-        "email": "foo@bar.com",
-        "password": "123456"
-      }
-    }, response => {
-      done()
-    })
+    seed()
+      .then(done)
+      .catch(err => { throw err })
   })
 
-  it('should fail to login', done => {
+  it('should fail to login user', done => {
     server.inject({
       method: 'POST',
       url: '/login',
       payload: {
-        email: "foo@bar.com",
-        password: "1234"
+        email: 'foo@bar.com',
+        password: '123457'
       }
     }, response => {
-      expect(response.statusCode).to.equal(400)
+      expect(response.statusCode).to.equal(401)
       done()
     })
   })
 
-  it('should login', done => {
+  it('should login user', done => {
     server.inject({
       method: 'POST',
       url: '/login',
       payload: {
-        email: "foo@bar.com",
-        password: "123456"
+        email: 'foo@bar.com',
+        password: '123456'
       }
     }, response => {
       expect(response.statusCode).to.equal(200)
