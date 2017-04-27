@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "ava": "^0.19.1",
-    "coveralls": "^2.11.12",
+    "coveralls": "^2.13.1",
     "dotenv": "^4.0.0",
     "fakeredis": "^2.0.0",
     "foreman": "^2.0.0",
