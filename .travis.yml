@@ -1,8 +1,9 @@
 language: node_js
 node_js:
-  - "argon"
+  - "node"
 services:
   - mongodb
+  - redis-server
 before_script:
   - sleep 15
 env: # required to not break the build when installing node-gyp
@@ -13,5 +14,3 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-after_success:
-    - './node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls'
